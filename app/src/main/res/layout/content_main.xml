@@ -74,6 +74,13 @@
 
         </android.support.v7.widget.CardView>
 
+        <TextView
+            android:id="@+id/tV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 
 
@@ -103,7 +110,7 @@
                 sl:scale_height="50"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
-                android:text="갤러리"
+                android:onClick="mOnClick"
                 />
 
             <!-- 카메라 촬영 선택 버튼 -->
@@ -117,7 +124,7 @@
                 sl:scale_height="50"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
-                android:text="촬영"
+                android:onClick="mOnClick"
                 />
 
             <!-- 폴더 추가 버튼 -->
@@ -131,7 +138,7 @@
                 sl:scale_height="50"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
-                android:text="폴더추가"
+                android:onClick="mOnClick"
                 />
 
         </com.ssomai.android.scalablelayout.ScalableLayout>

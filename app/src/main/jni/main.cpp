@@ -1,0 +1,212 @@
+#include "app_ssm_duck_duckapp_MainActivity.h"
+#include <jni.h>
+#include <android/log.h>
+#include <android/bitmap.h>
+
+#define LOG_TAG ("NDKTest")
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
+typedef struct {
+    uint8_t alpha;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+} argb;
+
+void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, void* gpixels){
+
+    //current values
+    //AndroidBitmapInfo* info
+    //AndroidBitmapInfo* ginfo
+    //void* pixels
+    //void* gpixels
+    int x, y;
+
+    //convert to grayscale
+    LOGI("Converting to grayscale....");
+    for(y=0; y<info->height; y++){
+        argb* line = (argb *)pixels;
+        uint8_t* grayline = (uint8_t*)gpixels;
+        for(x=0; x<info->width; x++){
+            grayline[x] = 255 - ( 0.3 * line[x].red + 0.59 * line[x].green + 0.11*line[x].blue);
+        }
+        pixels = (char *)pixels + info->stride;
+        gpixels = (char *)gpixels + ginfo->stride;
+    }
+}
+void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels, void* tpixels){
+    //current values
+    //AndroidBitmapInfo* ginfo
+    //AndroidBitmapInfo* tinfo
+    //void* gpixels
+    //void* tpixels
+    uint8_t *gdata;
+    uint8_t *tdata;
+    int sum;
+    int x, y;
+    int i,j;
+
+    //Local Thresholding Test1 = mask 3x3
+    LOGI("Local Thresholding....");
+
+    gdata = (uint8_t *)gpixels;
+    tdata = (uint8_t *)tpixels;
+
+    for(y=0;y<ginfo->height-2;y++){
+        for(x=0;x<ginfo->width-2;x++){
+
+            sum = 0;
+
+            //fill 255 if value is in boundary
+            if(y==0 || y == (ginfo->height-2)){
+                *(tdata + x + y*ginfo->width) = 0;
+            }else if(x==0 || x == (ginfo->width-2)){
+                *(tdata + x + y*ginfo->width) = 0;
+            }else{
+                for(i=-2;i<=2;i++){
+                    for(j=-2;j<=2;j++){
+                        sum += *(gdata + x + i + ( y + j )*(ginfo->stride));
+                    }
+                }
+                //LOGI("sum value is : %d / %d",*(gdata + x + y*ginfo->width),sum/9);
+                sum += 100;
+                //set range
+                if(*(gdata + x + y*ginfo->width) < (sum/25))
+                    *(tdata + x + y*ginfo->width) = 0;
+                else
+                    *(tdata + x + y*ginfo->width) = 255;
+            }
+        }
+    }
+}
+void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels, void* mpixels){
+    //current values
+    //AndroidBitmapInfo* tinfo
+    //AndroidBitmapInfo* minfo
+    //void* tixels
+    //void* mpixels
+    uint8_t *tdata;
+    uint8_t *mdata;
+    tdata = (uint8_t *)tpixels;
+    mdata = (uint8_t *)mpixels;
+
+    int x, y;
+    int Em[3][3]; //Erosion mask
+    int Dm[3][3]; // Dilation mask
+    int Msk[3][3];
+
+    Msk[0][0]=255; Msk[0][1]=0; Msk[0][2]=255;
+    Msk[1][0]=0; Msk[1][1]=0; Msk[1][2]=0;
+    Msk[2][0]=255; Msk[2][1]=0; Msk[2][2]=255;
+
+    //close operation
+    //1.Erosion
+
+    int i,j;
+    bool flag= true;
+    for(y=0; y<tinfo->height-1; y++){
+        for(x=0; x<tinfo->width-1; x++){
+
+            if(y==0 || y==tinfo->height-1){
+                *(mdata + x + y*(minfo->stride)) = *(tdata + x + y*(tinfo->stride)); //테두리는 값을 그대로 저장
+            }else if(x==0 || x==(tinfo->width-1)){
+                *(mdata + x + y*(minfo->stride)) = *(tdata + x + y*(tinfo->stride));
+            }else{
+                for(i=-1;i<=1;i++){
+                    for(j=-1; j<=1; j++){
+                        if( (Msk[i][j] == 0) && (*(tdata+x+i + (y+j)*(tinfo->stride)) != Msk[i][j])) { //마스크와 1의 값이 모두 같
+                            flag = false;
+                        }
+                    }
+                }
+                if(flag == true) {
+                    *(mdata + x + y*(minfo->stride)) = *(tdata + x + y * (tinfo->stride));
+                }else {
+                    //*(mdata + x + y * (minfo->stride)) = *(tdata + x + y * (tinfo->stride));
+                    *(mdata + x + y * (minfo->stride)) = 255;
+                }
+                flag = true;
+            }
+
+        }
+    }
+    //2.Dilation
+
+    //만약 모든 픽셀값들이 마스크와 일치하면
+    //결과값으로 1을 갖고있고
+    //아니면 0의 값을 반환
+}
+
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap,
+
+                                                                                          jobject tbitmap,jobject mbitmap) {
+
+
+    AndroidBitmapInfo info;
+    AndroidBitmapInfo grayinfo;
+    AndroidBitmapInfo tinfo;
+    AndroidBitmapInfo minfo;
+    void* pixels;
+    void* graypixels;
+    void* tpixels;
+    void* mpixels;
+
+
+    //get information for bitmap object
+    if(0>AndroidBitmap_getInfo(env, bitmap,&info)){
+        LOGE("AndroidBitmap_getInfo() failed!");
+        return;
+    }
+    if(0>AndroidBitmap_getInfo(env, graybitmap,&grayinfo)){
+        LOGE("AndroidBitmap_getInfo() failed!");
+        return;
+    }
+    if(0>AndroidBitmap_getInfo(env, tbitmap, &tinfo)){
+        LOGE("AndroidBitmap_getInfo() failed!");
+        return;
+    }
+    if(0>AndroidBitmap_getInfo(env, mbitmap, &minfo)){
+        LOGE("AndroidBitmap_getInfo() failed!");
+        return;
+    }
+
+    LOGI("imagesize(%d,%d)\n",info.width,info.height);
+
+    if(info.format != ANDROID_BITMAP_FORMAT_RGB_565){
+        LOGE("Bitmap format is not RGB_565:%d\n",info.format);
+        //return;
+    }
+    if(grayinfo.format != ANDROID_BITMAP_FORMAT_RGB_565){
+        LOGE("Bitmap format is not RGB_565:%d\n",grayinfo.format);
+        //return;
+    }
+
+    //attemp to lock the pixel address.
+    if(0> AndroidBitmap_lockPixels(env,bitmap,&pixels)){
+        LOGE("AndroidBitmap_lockPixels() failed!");
+        return;
+    }
+    if(0> AndroidBitmap_lockPixels(env,graybitmap,&graypixels)){
+        LOGE("AndroidBitmap_lockPixels() failed!");
+        return;
+    }
+    if(0> AndroidBitmap_lockPixels(env,tbitmap,&tpixels)){
+        LOGE("AndroidBitmap_lockPixels() failed!");
+        return;
+    }
+    if(0> AndroidBitmap_lockPixels(env,mbitmap,&mpixels)){
+        LOGE("AndroidBitmap_lockPixels() failed!");
+        return;
+    }
+
+    //converting...
+    reverse(&info,&grayinfo,pixels,graypixels);
+    threshold(&grayinfo,&tinfo,graypixels,tpixels);
+    morphology(&tinfo,&minfo,tpixels,mpixels);
+
+    AndroidBitmap_unlockPixels(env,bitmap);
+    AndroidBitmap_unlockPixels(env,graybitmap);
+    AndroidBitmap_unlockPixels(env,tbitmap);
+    AndroidBitmap_unlockPixels(env,mbitmap);
+}
