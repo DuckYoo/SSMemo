@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("NDKTest");
     }
 
+    public native void convertToGray(Bitmap original,Bitmap convertedimg);
+    public native void convertToBin(Bitmap original,Bitmap convertedimg);
+    public native void doMorphology(Bitmap original,Bitmap convertedimg);
+
     public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap, Bitmap mbitmap); //이미지 전처리
 
     public native void convertForShow(Bitmap bitmap, Bitmap rbitmap); //보여주기 위해 format 변환
@@ -122,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Intent intent = new Intent();
         imgview = (ImageView) findViewById(R.id.imageView1);
-        Bitmap photo;
+        Bitmap original;
+        Bitmap convertedimg;
         Bitmap gbitmap, tbitmap, mbitmap, rbitmap;
 
         if (requestCode == ERROR_MESSAGE) {
@@ -134,24 +139,46 @@ public class MainActivity extends AppCompatActivity {
                     Bundle extras = data.getExtras();
 
                     if (extras != null) {
-                        photo = extras.getParcelable("data"); //받은 이미지 Bitmap
+                        original = extras.getParcelable("data"); //받은 이미지 Bitmap
+                        convertedimg = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8);
                         //photo = (Bitmap)data.getExtras().get("data");
                         //photo = BitmapFactory.decodeResource(getResources(), R.drawable.testimg3);
+                        //gbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
+                        //tbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
+                        //mbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //mopology
+                        //rbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
-                        gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
-                        tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
-                        mbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //mopology
-                        rbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888); //showimage
+                        //convertImage(original, gbitmap, tbitmap, mbitmap);
 
-                        //intent.setAction("c.ImageCropActivity");
-                        //intent.putExtra("img",photo);
-                        //intent = new Intent(MainActivity.this, ImageCropActivity.class);
-                        //startActivity(intent);
+                        //ToGray
+                        convertToGray(original, convertedimg);
+                        if(original != null){
+                            original.recycle();
+                            original = null;
+                        }
 
-                        convertImage(photo, gbitmap, tbitmap, mbitmap);
-                        convertForShow(tbitmap, rbitmap);
-                        SaveImage(rbitmap);
-                        imgview.setImageBitmap(tbitmap);
+                        original = convertedimg;
+                        if(convertedimg != null){
+                            convertedimg.recycle();
+                            convertedimg = null;
+                        }
+                        convertedimg = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8);;
+
+                        //ToBinary
+                        /*
+                        convertToBin(original, convertedimg);
+                        if(original != null){
+                            original.recycle();
+                            original = null;
+                        }
+                        original = convertedimg;
+                        if(convertedimg != null){
+                            convertedimg.recycle();
+                            convertedimg = null;
+                        }*/
+                        //convertForShow(convertedimg, original);
+                        //SaveImage(original);
+                        imgview.setImageBitmap(original);
 
                     }
                     break;
@@ -159,16 +186,16 @@ public class MainActivity extends AppCompatActivity {
                 case PICK_FROM_GALLERY:
                     Bundle extras2 = data.getExtras();
                     if (extras2 != null) {
-                        photo = extras2.getParcelable("data"); //가져온 이미지 Bitmap
-                        gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
-                        tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
-                        mbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //mopology
-                        rbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888); //showimage
+                        original = extras2.getParcelable("data"); //가져온 이미지 Bitmap
+                        gbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
+                        tbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
+                        mbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ALPHA_8); //mopology
+                        rbitmap = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
-                        convertImage(photo, gbitmap, tbitmap, mbitmap);
+                        convertImage(original, gbitmap, tbitmap, mbitmap);
                         convertForShow(tbitmap, rbitmap);
-                        SaveImage(photo);
-                        imgview.setImageBitmap(photo);
+                        SaveImage(original);
+                        imgview.setImageBitmap(original);
                     }
                     break;
 
