@@ -2,144 +2,200 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.0.0\2534c458682c73f5b9871131ab3098d3f987ca3\okio-1.0.0.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.2"
-        sha1="02534c458682c73f5b9871131ab3098d3f987ca3">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\okio-1.0.0-726856438f27afcc7d3a437a2a5bcf79f64e6418.jar" />
+        sha1="57ae0d750ff83f0c738d21720224ac7ea866a094">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-fb82c3684167bc658211dc82a3c18f304727d84d.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.0.0\4c8d1536dba3812cc1592090dc20c47a4ed3c35e\okhttp-2.0.0.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\okhttp-2.0.0-e55ecda486cee20231b34cb4c6abdcf24ac4786e.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.crashlytics.sdk.android\answers\1.3.2\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="e99413cdc93bd7b001d312a4a33d25ac21042f69">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-5e081129ea04362629d3d3db312b0b8b25522088.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.1.0\jars\libs\internal_impl-23.1.0.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="076c7d9e22cc325b8008ff799e0c06dfb8eefdf3">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.0-af72d5e1dc001d7d6c98891d61d4c2e5d275ee90.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\gridlayout-v7\23.1.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="3713f30726299231eddfb206043ebb72a2519b6f">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-f445f78ddb913baac6ecd78b5ac3300e446ea5d6.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.1.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="571d08c205aab00f3f7e2e2ea80ad780bb80957e">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-d97487fdd634c0eafb9aff9a4ae7e482064aa602.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.crashlytics.sdk.android\crashlytics-core\2.3.5\jars\classes.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.5/jars/classes.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="d18ba1d0eff55680fdf9a35f70a6091e4bc1adcb">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-a7629bb703937cae5bb26ecc3d62a57394924f06.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-4d630ad100feb8834c2b6f29e7874191b1a8c11f.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.crashlytics.sdk.android\crashlytics\2.5.2\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="0c7f9fb9a729166c69fa585e01be2fe8fab4f45c">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-eb6d2126acf61e1dddadc9342a7b50da76322050.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.crashlytics.sdk.android\beta\1.1.3\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="b7a78990c10481f43cb4909f535ef4f11e60f1ab">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-6f091dea7aa3081e2ebf403cfb63fb7edea873e4.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\io.fabric.sdk.android\fabric\1.3.6\jars\classes.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.6/jars/classes.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="fc82596d7f7683c8b3a7e5715a2ed5295c586887">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-654208c3d75eb9fbfab575331cdb6fea89e99b35.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-180c2698bbae5c4857b9623668ea1c9e99ef4aa2.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.6.1\efb0a36546aa8857ab8df358b106c1817e03cbee\retrofit-1.6.1.jar"
+        jar="/home/hyejung/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.0/support-annotations-23.1.0.jar"
         jumboMode="false"
         revision="23.0.2"
-        sha1="efb0a36546aa8857ab8df358b106c1817e03cbee">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\retrofit-1.6.1-30afa6670f83b6f2606fd4ac1032ab1b02d0c156.jar" />
+        sha1="92e3fc113ec3ee36b64603a38857b95700025633">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/support-annotations-23.1.0-d7fb62edfb87a6023c1c864a0dffb69521c7cc10.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\palette-v7\23.1.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="167a5721524b1d2810d1b41ed76eff1d53a0e82b">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-31b0406540ba254c002529ef039b00d1f4d3a0c7.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\support-v13\23.1.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="1a57337a520bf40b9ad1e074cb780527dffa1aac">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\classes-ec7017f5fd733885a1f4da09a2665c5b2175cf9c.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-urlconnection\2.0.0\afe8399d352713b66e597e9670c741d1e60ae923\okhttp-urlconnection-2.0.0.jar"
-        jumboMode="false"
-        revision="23.0.2"
-        sha1="afe8399d352713b66e597e9670c741d1e60ae923">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\okhttp-urlconnection-2.0.0-ffd1d26da186cadc4424a60a91de72dafe3d8f50.jar" />
-    </item>
-    <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3/5fc52c41ef0239d1093a1eb7c3697036183677ce/gson-2.3.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\gson-2.3-4e90d0c8caf1118e44d6529d9b975ed8b689490e.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/gson-2.3-e90c9d3e67a41cf1f18af2dd4e254018714f241d.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.1.0\jars\libs\internal_impl-23.1.0.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/jars/libs/internal_impl-23.1.0.jar"
         jumboMode="false"
         revision="23.0.2"
-        sha1="464a342fa5cccfce70eaf13d4423979f7608dbd3">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.0-e84a88c29e9a77310cb47ea0b039415bba19722f.jar" />
+        sha1="8716243bf04bae8d6c9ca94d27b9a9be7236f0a3">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/internal_impl-23.1.0-fed0629670df90f39935b071a1b76ee0ada4a930.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3f151e49c316a5ab2c065969a3b3b55ef9b393fc">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-d4d4645f7185892e4a32ca080d53b1396cc2bf6c.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/design/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="19026d31f5d3ae868db81319671a642be5fbba08">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-265daae750dddc9062be7ab32712a87c6c1ecb06.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.3/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b7a78990c10481f43cb4909f535ef4f11e60f1ab">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-59a4a3a17eb9c79d44dbc4c3a5fb39cd2049b561.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.6.1/efb0a36546aa8857ab8df358b106c1817e03cbee/retrofit-1.6.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="efb0a36546aa8857ab8df358b106c1817e03cbee">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/retrofit-1.6.1-a14ef880e2a40fac310263e6ca0373fb78140c62.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/gridlayout-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3713f30726299231eddfb206043ebb72a2519b6f">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-c6514e1691483407ee30019a137660e004127650.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/palette-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="167a5721524b1d2810d1b41ed76eff1d53a0e82b">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-fef3bc4621f22f0bc62706a4765fb7bc06ce8f81.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.0.0/4c8d1536dba3812cc1592090dc20c47a4ed3c35e/okhttp-2.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/okhttp-2.0.0-8dc5e5d46be4211443ebd83d53d97cd678ba2e21.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="ddde541c289c8b816a8f8fd6c325d80788c522a6">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-b25b003512e5d63899f1f8197882bb2d7304cb0f.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.4.0/f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2/picasso-2.4.0.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\picasso-2.4.0-d410b934306992c1cc3cb39e8ee13079abda4db7.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/picasso-2.4.0-013587c594d202caa5a8dddb624b8cf4ee4ecca9.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\6.0.0\3a10b25b6820e19102e118711afe6a66c0bae123\butterknife-6.0.0.jar"
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.0.0/afe8399d352713b66e597e9670c741d1e60ae923/okhttp-urlconnection-2.0.0.jar"
         jumboMode="false"
         revision="23.0.2"
-        sha1="3a10b25b6820e19102e118711afe6a66c0bae123">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\butterknife-6.0.0-8259d9c09d7d3b8e55d40139db4476a96dad776f.jar" />
+        sha1="afe8399d352713b66e597e9670c741d1e60ae923">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.0.0-d2534cb1169f8c951bf87ade9aafb6024afb0b4a.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.nineoldandroids\library\2.4.0\e9b63380f3a242dbdbf103a2355ad7e43bad17cb\library-2.4.0.jar"
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1a57337a520bf40b9ad1e074cb780527dffa1aac">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-7d87226267edf95704e7b444d12a4b228919e4bb.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/support-v13/23.1.0/jars/libs/internal_impl-23.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="076c7d9e22cc325b8008ff799e0c06dfb8eefdf3">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/internal_impl-23.1.0-1073a125f754a0b8d4a941ac6f45b3f4604bcebc.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.ssomai/android.scalablelayout/2.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="48caf19df2970e8db716899a190090c41199a914">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-852388487cd2b229e115d212972bf83bd6e59c03.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.0.0/2534c458682c73f5b9871131ab3098d3f987ca3/okio-1.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="02534c458682c73f5b9871131ab3098d3f987ca3">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/okio-1.0.0-690c08047579930d45a53a059a39be458fde3e4e.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="0c7f9fb9a729166c69fa585e01be2fe8fab4f45c">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-6dfafdb3c3f63fa47dc564aa7c12b250de41cef8.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e99413cdc93bd7b001d312a4a33d25ac21042f69">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-d58221a2b3adfba1686a7182ada0c1c3f7dbdd4e.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.1.0/jars/libs/internal_impl-23.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="464a342fa5cccfce70eaf13d4423979f7608dbd3">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/internal_impl-23.1.0-e83ccaa98954e830d2d545c33c652d17546a64d4.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="d96886efea7cc74fbb3abd0e3b51d5638fc57be0">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-8ce3aa540045e796c9a27eedd002b19e58ac1d20.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\library-2.4.0-e17b0ad4e20ccb8397b9998565b5427eee07dbec.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/library-2.4.0-9eb62a8e408165fe34685e3c7aea797f5f1ddb7e.jar" />
     </item>
     <item
-        jar="C:\Users\Yoo\.gradle\caches\modules-2\files-2.1\com.jakewharton.timber\timber\2.5.0\5e743a8b1d28e7158f21dfe3a02bd933a1c6b54b\timber-2.5.0.jar"
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/6.0.0/3a10b25b6820e19102e118711afe6a66c0bae123/butterknife-6.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3a10b25b6820e19102e118711afe6a66c0bae123">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/butterknife-6.0.0-40f1b365262e979bd89451a925b55b3cb452bc38.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="571d08c205aab00f3f7e2e2ea80ad780bb80957e">
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/classes-4ce09dfe95caf10d8696ec58b34406c032ec677e.jar" />
+    </item>
+    <item
+        jar="/home/hyejung/.gradle/caches/modules-2/files-2.1/com.jakewharton.timber/timber/2.5.0/5e743a8b1d28e7158f21dfe3a02bd933a1c6b54b/timber-2.5.0.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="5e743a8b1d28e7158f21dfe3a02bd933a1c6b54b">
-        <dex dex="C:\Users\Yoo\Desktop\duckApp\app\build\intermediates\pre-dexed\debug\timber-2.5.0-be48e9792215fc5b652c556e4ed19f1ac2e89876.jar" />
+        <dex dex="/home/hyejung/바탕화면/SSMemo/app/build/intermediates/pre-dexed/debug/timber-2.5.0-35ef22acb7bd520cfde15f6ff160f55842a59b5a.jar" />
     </item>
 
 </items>

@@ -79,6 +79,22 @@ extern "C" {
 JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage
   (JNIEnv *, jobject, jobject, jobject, jobject, jobject);
 
+/*
+ * Class:     app_ssm_duck_duckapp_MainActivity
+ * Method:    convertForShow
+ * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
+ */
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertForShow
+  (JNIEnv *, jobject, jobject, jobject);
+
+/*
+ * Class:     app_ssm_duck_duckapp_MainActivity
+ * Method:    seperateLetter
+ * Signature: (Landroid/graphics/Bitmap;)V
+ */
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_seperateLetter
+  (JNIEnv *, jobject, jobject);
+
 #ifdef __cplusplus
 }
 #endif

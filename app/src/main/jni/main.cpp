@@ -14,6 +14,7 @@ typedef struct {
     uint8_t blue;
 } argb;
 
+
 void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, void* gpixels){
 
     //current values
@@ -25,6 +26,7 @@ void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, voi
 
     //convert to grayscale
     LOGI("Converting to grayscale....");
+
     for(y=0; y<info->height; y++){
         argb* line = (argb *)pixels;
         uint8_t* grayline = (uint8_t*)gpixels;
@@ -36,61 +38,157 @@ void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, voi
     }
 }
 void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels, void* tpixels){
-    //current values
-    //AndroidBitmapInfo* ginfo
-    //AndroidBitmapInfo* tinfo
-    //void* gpixels
-    //void* tpixels
     uint8_t *gdata;
     uint8_t *tdata;
-    int sum;
+    float hist[260] = {0,}; //histogram info
+    float H[260] = {0,}; //sum of histo
+    float iH[260] = {0,};
+    float work1 = 0, work2 = 0;
+    double work3 = 0.0, vari = 0.0, mvari = 0.0;
+    float uT = 0, w = 0, u = 0, m = 0, fm = 0;
+    int size = ((ginfo->height) * (ginfo->width));
+    int sum = 0, idx = 0;
+    int tvari = 0;
+    int min = 255, max = 0;
+    int pvalue[64];
     int x, y;
-    int i,j;
+    int i, j;
 
     //Local Thresholding Test1 = mask 3x3
     LOGI("Local Thresholding....");
 
-    gdata = (uint8_t *)gpixels;
-    tdata = (uint8_t *)tpixels;
+    gdata = (uint8_t *) gpixels;
+    tdata = (uint8_t *) tpixels;
 
-    for(y=0;y<ginfo->height-2;y++){
-        for(x=0;x<ginfo->width-2;x++){
+/********************************************************* //Otsu Algorithm
+    for (y = 0; y < ginfo->height; y++) {
+        for (x = 0; x < ginfo->width; x++) {
+            hist[*(gdata + x + y * ginfo->width)]++; //히스토그램 값 구하고
+        }
+    }
 
+    for(i=1;i<=255;i++){
+        if(i==1){
+            H[i - 1] = hist[i - 1];
+            iH[i-1] = i*hist[i-1];
+        }
+        else {
+            H[i - 1] = H[i-2] + hist[i - 1];
+            iH[i - 1] = iH[i-2] + i*hist[i - 1];
+        }
+    }
+
+    for(i=1;i<255;i++){
+        w = H[i-1]/(float)size; //weight
+        m = iH[i-1]/H[i-1]; //mean value
+        fm = (iH[255]-iH[i-1])/(H[255]-H[i-1]);
+       // work1 = (hist[i-1] - m)*(hist[i-1] - m);
+       // work2 += work1*hist[i-1]/H[i-1];
+
+        //LOGI("H[i-1]: %lf",H[i-1]);
+        //LOGI("iH[i-1]: %lf",iH[i-1]);
+        //LOGI("w: %lf",w);
+        //LOGI("m: %lf",m);
+
+        vari=w*(1-w)*m*fm;
+        if(vari > mvari){
+            mvari = vari;
+            tvari = i-1;
+        }
+    }
+    int threshold = tvari - 10;
+
+    LOGI("threshold value is %d",threshold);
+
+    for(y=0;y<ginfo->height;y++){
+        for(x=0;x<ginfo->width;x++){
+            if(*(gdata + x + y * tinfo->width) < threshold)
+                *(tdata + x + y * tinfo->width) = 0;
+            else
+                *(tdata + x + y * tinfo->width)= 255;
+        }
+    }
+**********************************************************************/ //End of Otsu!
+
+//*********************************************************This is for median:Cas1,Case2
+    for (y = 0; y < ginfo->height - 3; y++) {
+        for (x = 0; x < ginfo->width - 3; x++) {
             sum = 0;
-
-            //fill 255 if value is in boundary
-            if(y==0 || y == (ginfo->height-2)){
-                *(tdata + x + y*ginfo->width) = 0;
-            }else if(x==0 || x == (ginfo->width-2)){
-                *(tdata + x + y*ginfo->width) = 0;
-            }else{
-                for(i=-2;i<=2;i++){
-                    for(j=-2;j<=2;j++){
-                        sum += *(gdata + x + i + ( y + j )*(ginfo->stride));
+            idx = 0;
+            if (y < 3 || y >= (ginfo->height - 3)) {
+                *(tdata + x + y * tinfo->width) = 0;
+            } else if (x < 3 || x >= (ginfo->width - 3)) {
+                *(tdata + x + y * tinfo->width) = 0;
+            } else {
+                //********************medianCase1
+                for (i = -3; i <= 3; i++) {
+                    for (j = -3; j <= 3; j++) {
+                        int tmp = *(gdata + x + i + (y + j) * (ginfo->stride));
+                        if (tmp < min)
+                            min = tmp;
+                        else if (tmp > max)
+                            max = tmp;
                     }
                 }
-                //LOGI("sum value is : %d / %d",*(gdata + x + y*ginfo->width),sum/9);
-                sum += 100;
-                //set range
-                if(*(gdata + x + y*ginfo->width) < (sum/25))
-                    *(tdata + x + y*ginfo->width) = 0;
+
+                if (*(gdata + x + y * ginfo->width) < (min + max + 14) / 2)
+                    *(tdata + x + y * tinfo->width) = 0;
                 else
-                    *(tdata + x + y*ginfo->width) = 255;
+                    *(tdata + x + y * tinfo->width) = 255;
+                //************************************///end of Case1
+
+                /***************************this is for loacl thresholding median filter: Case2
+                for (i = -3; i <= 3; i++) {
+                    for (j = -3; j <= 3; j++) {
+                        sum += *(gdata + x + i + (y + j) * (ginfo->stride));
+                    }
+                }
+
+            sum -= 130;
+            if (*(gdata + x + y * ginfo->width) < (sum / 49))
+                *(tdata + x + y * ginfo->width) = 255;
+            else
+                *(tdata + x + y * ginfo->width) = 0;
+            ***********************************************///end of Case2
+
+                /*this is for mean filter. but it takes too long time.
+                for(i=-3;i<=3;i++){
+                    for(j=-3;j<=3;j++){
+                        pvalue[idx++] = *(gdata + x + y * ginfo->width);
+                    }
+                }
+                for(i=0; i<48; i++){
+                    for(j=i; j<48; j++){
+                        if(pvalue[j] > pvalue[j+1]){
+                            int tmp = pvalue[j];
+                            pvalue[j] = pvalue[j+1];
+                            pvalue[j+1] = tmp;
+                        }
+                    }
+                }
+                if(pvalue[49/2] < *(gdata + x + y * ginfo->width))
+                    *(tdata + x + y * ginfo->width) = 255;
+                else
+                    *(tdata + x + y * ginfo->width) = 0;*/
+
+
             }
         }
     }
 }
+
 void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels, void* mpixels){
     //current values
     //AndroidBitmapInfo* tinfo
     //AndroidBitmapInfo* minfo
     //void* tixels
     //void* mpixels
+
+
     uint8_t *tdata;
     uint8_t *mdata;
     tdata = (uint8_t *)tpixels;
     mdata = (uint8_t *)mpixels;
-
     int x, y;
     int Em[3][3]; //Erosion mask
     int Dm[3][3]; // Dilation mask
@@ -102,6 +200,8 @@ void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels
 
     //close operation
     //1.Erosion
+    LOGI("Mopoly....");
+
 
     int i,j;
     bool flag= true;
@@ -115,16 +215,17 @@ void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels
             }else{
                 for(i=-1;i<=1;i++){
                     for(j=-1; j<=1; j++){
-                        if( (Msk[i][j] == 0) && (*(tdata+x+i + (y+j)*(tinfo->stride)) != Msk[i][j])) { //마스크와 1의 값이 모두 같
+                        if( (Msk[i][j] == 0) && (*(tdata+x+i + (y+j)*(tinfo->stride)) != Msk[i+1][j+1])) { //마스크와 1의 값이 모두 같
                             flag = false;
                         }
                     }
                 }
                 if(flag == true) {
-                    *(mdata + x + y*(minfo->stride)) = *(tdata + x + y * (tinfo->stride));
-                }else {
-                    //*(mdata + x + y * (minfo->stride)) = *(tdata + x + y * (tinfo->stride));
+                    //*(mdata + x + y*(minfo->stride)) = *(tdata + x + y * (tinfo->stride));
                     *(mdata + x + y * (minfo->stride)) = 255;
+                }else {
+                    *(mdata + x + y * (minfo->stride)) = *(tdata + x + y * (tinfo->stride));
+                    //*(mdata + x + y * (minfo->stride)) = 255;
                 }
                 flag = true;
             }
@@ -138,9 +239,7 @@ void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels
     //아니면 0의 값을 반환
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap,
-
-                                                                                          jobject tbitmap,jobject mbitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap, jobject tbitmap,jobject mbitmap) {
 
 
     AndroidBitmapInfo info;
@@ -173,6 +272,7 @@ JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEn
 
     LOGI("imagesize(%d,%d)\n",info.width,info.height);
 
+    /*
     if(info.format != ANDROID_BITMAP_FORMAT_RGB_565){
         LOGE("Bitmap format is not RGB_565:%d\n",info.format);
         //return;
@@ -180,7 +280,16 @@ JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEn
     if(grayinfo.format != ANDROID_BITMAP_FORMAT_RGB_565){
         LOGE("Bitmap format is not RGB_565:%d\n",grayinfo.format);
         //return;
+    }*/
+    if(info.format != ANDROID_BITMAP_FORMAT_RGBA_8888){
+        LOGE("Bitmap format is not RGBA_8888:%d\n",info.format);
+        //return;
     }
+    if(grayinfo.format != ANDROID_BITMAP_FORMAT_A_8){
+        LOGE("Bitmap format is not BITMAP_A_8:%d\n",grayinfo.format);
+        //return;
+    }
+
 
     //attemp to lock the pixel address.
     if(0> AndroidBitmap_lockPixels(env,bitmap,&pixels)){

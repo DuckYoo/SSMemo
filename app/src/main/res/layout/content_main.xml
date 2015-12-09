@@ -63,10 +63,11 @@
                     </LinearLayout>
 
                     <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="메뉴"
-                        android:layout_weight="0.2"
+                        android:layout_width="40dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/memberimg"
+                        android:layout_weight="0.1"
+                        android:layout_marginBottom="10dp"
                         />
                 </LinearLayout>
 
@@ -90,13 +91,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.00"
+        android:layout_marginBottom="10dp"
         >
 
         <com.ssomai.android.scalablelayout.ScalableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             sl:scale_base_width="300"
-            sl:scale_base_height="50"
+            sl:scale_base_height="70"
             >
 
             <!-- 갤러리 선택 버튼 -->
@@ -106,10 +110,11 @@
                 android:layout_height="wrap_content"
                 sl:scale_left="0"
                 sl:scale_top="0"
-                sl:scale_width="100"
-                sl:scale_height="50"
+                sl:scale_width="70"
+                sl:scale_height="70"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
+                android:background="@drawable/galleryimg"
                 android:onClick="mOnClick"
                 />
 
@@ -118,12 +123,13 @@
                 android:id="@+id/btn_take_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                sl:scale_left="100"
+                sl:scale_left="110"
                 sl:scale_top="0"
-                sl:scale_width="100"
-                sl:scale_height="50"
+                sl:scale_width="70"
+                sl:scale_height="70"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
+                android:background="@drawable/cameraimg"
                 android:onClick="mOnClick"
                 />
 
@@ -132,12 +138,13 @@
                 android:id="@+id/btn_add_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                sl:scale_left="200"
+                sl:scale_left="220"
                 sl:scale_top="0"
-                sl:scale_width="100"
-                sl:scale_height="50"
+                sl:scale_width="70"
+                sl:scale_height="70"
                 sl:scale_textsize="15"
                 android:layout_gravity="center"
+                android:background="@drawable/fileimg"
                 android:onClick="mOnClick"
                 />
 
