@@ -73,30 +73,6 @@ extern "C" {
 #define app_ssm_duck_duckapp_MainActivity_ERROR_MESSAGE 3L
 /*
  * Class:     app_ssm_duck_duckapp_MainActivity
- * Method:    convertToGray
- * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
- */
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertToGray
-  (JNIEnv *, jobject, jobject, jobject);
-
-/*
- * Class:     app_ssm_duck_duckapp_MainActivity
- * Method:    convertToBin
- * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
- */
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertToBin
-  (JNIEnv *, jobject, jobject, jobject);
-
-/*
- * Class:     app_ssm_duck_duckapp_MainActivity
- * Method:    doMorphology
- * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
- */
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_doMorphology
-  (JNIEnv *, jobject, jobject, jobject);
-
-/*
- * Class:     app_ssm_duck_duckapp_MainActivity
  * Method:    convertImage
  * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
  */

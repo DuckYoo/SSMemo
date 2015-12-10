@@ -131,7 +131,7 @@ void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels,
                     }
                 }
 
-                if (*(gdata + x + y * ginfo->width) < (min + max + 14) / 2)
+                if (*(gdata + x + y * ginfo->width) < (min + max) / 2)
                     *(tdata + x + y * tinfo->width) = 0;
                 else
                     *(tdata + x + y * tinfo->width) = 255;
