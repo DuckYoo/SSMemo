@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := NDKTest
-LOCAL_SRC_FILES := main.cpp letterConvert.cpp convertForShow.cpp
+LOCAL_SRC_FILES := main.cpp convertForShow.cpp LetterSeperate.cpp
 LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += -ljnigraphics
 

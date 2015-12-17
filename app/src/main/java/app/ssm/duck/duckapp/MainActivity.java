@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public native void convertForShow(Bitmap bitmap, Bitmap rbitmap); //보여주기 위해 format 변환
 
-    public native void seperateLetter(Bitmap bitmap);
+    public native void seperateLetter(Bitmap bitmap); //문자영역 분할 함
     //native를 위한 method 종료
 
 
@@ -77,17 +77,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_take_camera:
 
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //intent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)));
 
-                intent.putExtra("crop", "true");
-                intent.putExtra("aspectX", 0);
-                intent.putExtra("aspectY", 0);
-                intent.putExtra("outputX", 200);
-                intent.putExtra("outputY", 150);
-
                 try {
-                    //intent.putExtra("return-data", true);
                     startActivityForResult(intent, PICK_FROM_CAMERA); //실제로 카메라 수행
                 } catch (ActivityNotFoundException e) {
                     intent.putExtra(null, true);
@@ -101,17 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
 
-                /*
-                // 잘라내기 셋팅
-                intent.putExtra("crop", "true");
-                intent.putExtra("aspectX", 1); //crop한 이미지의 x축 크기
-                intent.putExtra("aspectY", 1); //crop한 이미지의 y축 크기
-                //intent.putExtra("outputX", 256); //crop박스의 x축 비율
-                //intent.putExtra("outputY", 256); //crop박스의 y축 비율
-                //intent.putExtra("scale", "true");
-                intent.putExtra("outputFormat", "JPEG");
-                intent.putExtra("scale", "false");
-*/
                 try {
                     startActivityForResult(intent, PICK_FROM_GALLERY);
 
@@ -149,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     rbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
                     convertImage(photo, gbitmap, tbitmap, mbitmap);
+                    seperateLetter(tbitmap);
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
                     imgview.setImageBitmap(tbitmap);
@@ -170,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     rbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
                     convertImage(photo, gbitmap, tbitmap, mbitmap);
+                    seperateLetter(tbitmap);
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
                     imgview.setImageBitmap(tbitmap);
