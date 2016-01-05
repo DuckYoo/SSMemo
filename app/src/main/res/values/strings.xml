@@ -7,5 +7,6 @@
     <string name="api_key">fe1ec178082a54f8841645dc84505a23</string>
     <string name="github_url">http://naver.com</string>
     <string name="hint">Search Tag</string>
+    <string name="title_activity_crop">CropActivity</string>
 
 </resources>

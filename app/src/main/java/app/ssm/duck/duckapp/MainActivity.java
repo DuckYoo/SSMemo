@@ -1,41 +1,23 @@
 package app.ssm.duck.duckapp;
 
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 
-import app.ssm.duck.duckapp.File.JavaEditor;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +25,12 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("NDKTest");
     }
-
-    public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap, Bitmap mbitmap); //이미지 전처리
-
-    public native void convertForShow(Bitmap bitmap, Bitmap rbitmap); //보여주기 위해 format 변환
-
-    public native void seperateLetter(Bitmap bitmap); //문자영역 분할 함
-    //native를 위한 method 종료
+    //비트맵 이미지 전처리 함수
+    public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap, Bitmap mbitmap);
+    //비트맵 format을 맞춰주는 함수
+    public native void convertForShow(Bitmap bitmap, Bitmap rbitmap);
+    //문자영역 추출 함수
+    public native void seperateLetter(Bitmap bitmap);
 
 
     private static final int PICK_FROM_CAMERA = 0; //카메라
@@ -67,48 +48,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     //클릭이벤트
     public void mOnClick(View v) {
         final Intent intent;
 
         switch (v.getId()) {
-            //카메라 선택
+            //카메라 선
             case R.id.btn_take_camera:
-
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)));
-
                 try {
-                    startActivityForResult(intent, PICK_FROM_CAMERA); //실제로 카메라 수행
+                    startActivityForResult(intent, PICK_FROM_CAMERA);
                 } catch (ActivityNotFoundException e) {
                     intent.putExtra(null, true);
                     startActivityForResult(intent, ERROR_MESSAGE);
                 }
-
                 break;
 
             //갤러리 선택
             case R.id.btn_select_gallery:
                 intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-
                 try {
                     startActivityForResult(intent, PICK_FROM_GALLERY);
-
                 } catch (ActivityNotFoundException e) {
                     startActivityForResult(Intent.createChooser(intent, "사진 불러오기"), ERROR_MESSAGE);
                 }
                 break;
+
             //폴더추가 선택
             case R.id.btn_add_folder:
-                intent = new Intent(MainActivity.this, JavaEditor.class);
-                startActivityForResult(intent, MAKE_NEW_FOLDER);
+                break;
         }
-    } //mOnclick 종
+    }
 
+    //
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(this,CropActivity.class);
         imgview = (ImageView) findViewById(R.id.imageView1);
         Bitmap photo = null;
         Bitmap gbitmap, tbitmap, mbitmap, rbitmap;
@@ -116,20 +92,26 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ERROR_MESSAGE) {
             ;
         } else if (resultCode == RESULT_OK) {
+
             switch (requestCode) {
-
                 case PICK_FROM_CAMERA:
-
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     final File file = getTempFile(this);
                     options.inSampleSize = 4;
                     photo = BitmapFactory.decodeFile(file.getAbsolutePath().toString(), options);
+
+                    intent.putExtra("imagePath",file.getAbsolutePath().toString());
+                    startActivity(intent);
+
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
                     tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
                     mbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //mopology
                     rbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
                     convertImage(photo, gbitmap, tbitmap, mbitmap);
+
+                    /////////서버로 gbitmap
+
                     seperateLetter(tbitmap);
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
@@ -145,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                     BitmapFactory.Options options2 = new BitmapFactory.Options();
                     options2.inSampleSize = 4;
                     photo = BitmapFactory.decodeFile(selectedImagePath, options2);
+
+                    intent.putExtra("imagePath",selectedImagePath);
+                    startActivity(intent);
 
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
                     tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded

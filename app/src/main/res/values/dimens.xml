@@ -10,4 +10,5 @@
     <dimen name="navdrawer_width">260dp</dimen>
     <dimen name="size_image_card">260dp</dimen>
     <dimen name="triple_height_toolbar">400dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
