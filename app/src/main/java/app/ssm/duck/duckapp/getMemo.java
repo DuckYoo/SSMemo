@@ -11,7 +11,7 @@ import java.net.URL;
 public class getMemo extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
-
+        return "hello";
     }
 
     public void getResult(String memo_id) {
