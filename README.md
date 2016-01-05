@@ -33,9 +33,9 @@ https://github.com/broDuck/ssmemoSpring
 ### 참조 ###
 **사용한 오픈소스**
 
-Google API
-
-Apache 2.0
+- Google API
+- Apache 2.0
+- Spring Framework
 
 ### 제약사항 ###
 
