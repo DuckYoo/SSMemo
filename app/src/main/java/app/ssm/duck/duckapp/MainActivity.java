@@ -276,7 +276,6 @@ public class MainActivity extends AppCompatActivity
                     photo = BitmapFactory.decodeFile(file.getAbsolutePath().toString(), options);
 
                     intent.putExtra("imagePath", file.getAbsolutePath().toString());
-                    Log.d("TAG", file.getAbsolutePath().toString());
                     startActivity(intent);
 
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
@@ -290,7 +289,7 @@ public class MainActivity extends AppCompatActivity
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
 
-                    imgview.setImageBitmap(tbitmap);
+                    //imgview.setImageBitmap(tbitmap);
                     break;
 
                 case PICK_FROM_GALLERY:
@@ -303,6 +302,9 @@ public class MainActivity extends AppCompatActivity
                     options2.inSampleSize = 4;
                     photo = BitmapFactory.decodeFile(selectedImagePath, options2);
 
+                    intent.putExtra("imagePath",selectedImagePath);
+                    startActivity(intent);
+
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
                     tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
                     mbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //mopology
@@ -312,7 +314,7 @@ public class MainActivity extends AppCompatActivity
                     seperateLetter(tbitmap);
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
-                    imgview.setImageBitmap(tbitmap);
+                    //imgview.setImageBitmap(tbitmap);
 
                     break;
 
