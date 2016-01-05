@@ -3,9 +3,12 @@
 
     <string name="app_name">SSMemo</string>
     <string name="action_settings">Settings</string>
-    <string name="api_endpoint">https://api.flickr.com</string>
-    <string name="api_key">fe1ec178082a54f8841645dc84505a23</string>
-    <string name="github_url">http://naver.com</string>
     <string name="hint">Search Tag</string>
+    <string name="title_activity_crop">CropActivity</string>
+    <string name="server_client_id">693226472118-6meg9uneh3ebnsvkt12oodk8capk3jfg.apps.googleusercontent.com</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_navi">NaviActivity</string>
 
 </resources>
