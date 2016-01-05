@@ -195,12 +195,6 @@ public class MainActivity extends AppCompatActivity
             return convertView;
         }
 
-        /**
-         *
-         * @param image
-         * @param mName
-         * @param mUpdate
-         */
         public void addItem(Drawable image, String mName, String mUpdate) {
             ListData addInfo = new ListData();
             addInfo.mImage = image;
@@ -264,6 +258,8 @@ public class MainActivity extends AppCompatActivity
 
                             insertMemo.execute("http://210.118.64.177/android/insert.php");
                             ad.hide();
+
+                            Toast.makeText(MainActivity.this, "메모가 생성되었습니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
