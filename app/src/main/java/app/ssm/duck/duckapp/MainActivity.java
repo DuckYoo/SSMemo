@@ -209,12 +209,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //클릭이벤트
+    /**
+     * 카메라 또는 갤러리를 선택했을때의 동작을 결정하는 함수.
+     */
     public void mOnClick(View v) {
         final Intent intent;
 
         switch (v.getId()) {
-            //카메라 선
+            //카메라 선택
             case R.id.btn_take_camera:
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)));
@@ -261,27 +263,34 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * 카메라와 갤러리를 선택한 뒤 다시 메인 엑티비티로 돌아온 뒤 수행하는 작업.
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //crop을 수행하기 위해 새로운 intent 생성
         Intent intent = new Intent(this, CropActivity.class);
-        //imgview = (ImageView) findViewById(R.id.imageView1);
+        //카메라 또는 갤러리로부터 가져온 이미지를 담을 bitmap
         Bitmap photo = null;
+        //전처리한 비트맵 정보를 담을 bitmap
         Bitmap gbitmap, tbitmap, mbitmap, rbitmap;
 
         if (requestCode == ERROR_MESSAGE) {
-            ;
-        } else if (resultCode == RESULT_OK) {
 
+        } else if (resultCode == RESULT_OK) {
             switch (requestCode) {
+
+                //카메라를 선택했을 경우
                 case PICK_FROM_CAMERA:
-                    BitmapFactory.Options options = new BitmapFactory.Options();
+
+                    //사진의 화질을 연산하기 좋도록 1/4로 조정
+                   BitmapFactory.Options options = new BitmapFactory.Options();
                     final File file = getTempFile(this);
                     options.inSampleSize = 4;
                     photo = BitmapFactory.decodeFile(file.getAbsolutePath().toString(), options);
 
+                    //crop activity로 이
                     intent.putExtra("imagePath", file.getAbsolutePath().toString());
                     startActivity(intent);
-
-                    //옮겨야 할 부분!
 
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
                     tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
@@ -296,11 +305,12 @@ public class MainActivity extends AppCompatActivity
 
                     break;
 
+                //갤러리를 선택했을 경우
                 case PICK_FROM_GALLERY:
 
+                    //갤러리 이미지의  Uri를 가지고 경로를 찾음
                     Uri selectedImageUri = data.getData();
                     String selectedImagePath = getRealPath(selectedImageUri);
-
 
                     BitmapFactory.Options options2 = new BitmapFactory.Options();
                     options2.inSampleSize = 4;
@@ -326,8 +336,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-    } //onActivityResult 종료
+    }
 
+    /**
+     * 비트맵 이미지를 받아 SDcard에 저장하는 함수.
+     */
     private void SaveImage(Bitmap bitmapimg) {
         Intent gintent = new Intent(this,GroupingActivity.class);
 
@@ -375,6 +388,9 @@ public class MainActivity extends AppCompatActivity
         convertedFilePath = file.getAbsolutePath().toString();
     }
 
+    /**
+     * 임시 (이미지) 파일을 생성하는 함수
+     */
     private File getTempFile(Context context) {
         final File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
         if (!path.exists()) {
@@ -383,6 +399,9 @@ public class MainActivity extends AppCompatActivity
         return new File(path, "image.tmp");
     }
 
+    /**
+     * 갤러리에서 선택한 이미지의 절대 경로를 반환하는 함수.
+     */
     private String getRealPath(Uri uri) {
         String[] proj = {MediaStore.Images.Media.DATA};
 

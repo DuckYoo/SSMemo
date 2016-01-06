@@ -134,7 +134,9 @@ public class CropActivity extends AppCompatActivity {
 
     }
 
-    //사용자가 지정한 영역을 실제로 자르는 함수.
+    /**
+     * 사용자가 지정한 영역을 실제로 자르는 함수
+     */
    public void cutting(View v){
        v.destroyDrawingCache();
        v.bringToFront();
@@ -156,7 +158,9 @@ public class CropActivity extends AppCompatActivity {
    }
 
 
-    //crop을 위해 bitmap을 왜곡하는 함수.
+    /**
+     * crop을 위해 Bitmap을 왜곡하는 함수
+     */
     public void cropping(View v){
         //화면에 더이상 그만 그림.
         v.destroyDrawingCache();
@@ -166,26 +170,21 @@ public class CropActivity extends AppCompatActivity {
         int cw = (int)getWidth()+10;
         int ch = (int)getHeight()+10;
 
-        //crop된 이미지를 보여준다.
 
         float[] src = new float[] {x1,y1,x4,y4,x3,y3,x2,y2};
-        //float[] dst = new float[] {0,0,resizedbitmap.getWidth(),0,resizedbitmap.getWidth(),resizedbitmap.getHeight(),0,resizedbitmap.getHeight()};
         float[] dst = new float[] {x1,y1,x1+cw,y1,x1+cw,y1+ch,x1,y1+ch};
 
         matrix = new Matrix();
         matrix.setPolyToPoly(src, 0, dst, 0, src.length >> 1);
 
-
         try{
             if(resizedbitmap == null)
                 Log.d("TAG","resizedbitmap is null!");
             else {
+                //선택한 영역을 펴서 새로운 bitmap 생성
                 Bitmap croppedbitmap = Bitmap.createBitmap(resizedbitmap, 0, 0, resizedbitmap.getWidth(), resizedbitmap.getHeight(), matrix, true);
-                //Bitmap croppedbitmap = Bitmap.createBitmap(bitmapimg,0,0,bitmapimg.getWidth(),bitmapimg.getHeight(),matrix,true);
                 if (bitmapimg != croppedbitmap) {
                     bitmapimg.recycle();
-                    //bitmapimg = Bitmap.createBitmap(croppedbitmap, 0, 0, resizedbitmap.getWidth(), resizedbitmap.getHeight());
-                    //bitmapimg = Bitmap.createBitmap(croppedbitmap,(int)x1,(int)y1,cw,ch);
                     bitmapimg = croppedbitmap;
                 }
             }
@@ -219,14 +218,15 @@ public class CropActivity extends AppCompatActivity {
         return x<y?x:y;
     }
 
-
+    /**
+     * crop작업을 할 customView 클래스
+     */
     public class cropView extends View{
         Paint paint = new Paint();
         Bitmap backbitmap;
 
         public cropView(Context context){
             super(context);
-
             paint.setColor(Color.BLACK);
             paint.setStrokeWidth(10);
             paint.setAntiAlias(true);
@@ -261,10 +261,14 @@ public class CropActivity extends AppCompatActivity {
                 dragcoordi = false;
                 refIdx = 0;
             }
+            //화면 업데이트
             invalidate();
             return true;
         }
 
+        /**
+         * 사용자가 터치한 영역이 범위내인지를 확인하는 함수.
+         */
         public void compareToCoordi(float x,float y){
 
             if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
@@ -294,6 +298,10 @@ public class CropActivity extends AppCompatActivity {
                 refIdx =4;
             }
         }
+
+        /**
+         * 사용자가 드래그할때 crop영역의 각 꼭지점의 위치를 새로 setting해주는 함수.
+         */
         public void dragCoordi(float x, float y){
             //범위를 벗어날 경우엔 자신 그대로.
             if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
@@ -315,19 +323,20 @@ public class CropActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * cropView의 Canvas에 Bitmap과 crop영역을 그려주는 함수.
+         */
         public void onDraw(Canvas canvas){
             super.onDraw(canvas);
             canvas.drawColor(Color.BLACK);
 
-            //Tmp
             Path path = new Path();
             paint.setAntiAlias(true);
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(10);
-            //TMP
 
-            //캔버스에 배경 비트맵 먼저 그려주고
+            //비트맵의 회전 정도에 따라 캔버스에 비율을 맞춰서 그려준다.
             if (rotateFlag == 1 || rotateFlag == 3) {
                 nwidth = canvas.getWidth();
                 nheight = canvas.getHeight();
@@ -336,7 +345,6 @@ public class CropActivity extends AppCompatActivity {
                 endHeight = nheight;
                 canvas.drawBitmap(backbitmap, 0, srtHeight, null);
             } else {
-                //중간부터 canvas에 채우도록 코드 추가해야함!.
                 nwidth = canvas.getWidth();
                 nheight = (canvas.getHeight() * canvas.getWidth()) / bitmapimg.getWidth();
                 backbitmap = Bitmap.createScaledBitmap(bitmapimg, nwidth, nheight, false);
@@ -354,6 +362,9 @@ public class CropActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * crop영역을 지정하고 그려주는 함수.
+     */
     void setCropRange(Canvas canvas){
         Paint paint = new Paint();
         Path path = new Path();
@@ -362,6 +373,7 @@ public class CropActivity extends AppCompatActivity {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(10);
 
+        //crop영역의 초기화
         if(x1 == 0 && x2 == 0 && x3 == 0 && x4 == 0){
             x1 = canvas.getWidth()/2 - 200;
             x2 = canvas.getWidth()/2 - 200;
@@ -390,7 +402,9 @@ public class CropActivity extends AppCompatActivity {
     }
 
 
-    //비트맵 이미지를 회전해주는 함수.
+    /**
+     * 회전정도를 인자로 받아 비트맵이미지를 회전해주는 함수
+     */
     private void rotateBitmapImage(int degree){
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -413,7 +427,9 @@ public class CropActivity extends AppCompatActivity {
         }
     }
 
-    //이미지의 회전된 정도를 계산.
+    /**
+     * 이미지의 회전 정도를 계산하고 반환해주는 함수.
+     */
     public int getImageRotatedDegree(){
         int degree = 0;
         image_path = getIntent().getStringExtra("imagePath");

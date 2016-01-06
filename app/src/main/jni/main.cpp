@@ -15,7 +15,9 @@ typedef struct {
     uint8_t blue;
 } argb;
 
-
+/**
+ * 원본 칼라 비트맵을 그레이 스케일로 변환하는 함수.
+ */
 void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, void* gpixels){
 
     //current values
@@ -38,6 +40,10 @@ void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, voi
         gpixels = (char *)gpixels + ginfo->stride;
     }
 }
+
+/**
+ * 그레이 스케일의 비트맵을 이진화하는 함수.
+ */
 void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels, void* tpixels) {
     uint8_t *gdata;
     uint8_t *tdata;
