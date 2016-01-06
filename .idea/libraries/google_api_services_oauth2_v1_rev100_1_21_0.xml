@@ -4,8 +4,6 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-oauth2/v1-rev100-1.21.0/506ea78cfd564d47bf8832425a0e0fba93176367/google-api-services-oauth2-v1-rev100-1.21.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-oauth2/v1-rev100-1.21.0/42877d64499276cc972087fabb97c4f8544cc05b/google-api-services-oauth2-v1-rev100-1.21.0-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

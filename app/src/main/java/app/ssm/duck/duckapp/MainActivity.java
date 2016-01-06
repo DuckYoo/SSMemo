@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     private ListView mListView = null;
     private ListViewAdapter mAdapter = null;
-
+    private String convertedFilePath;
     UserInfo account;
 
     ImageView imgview; //이미지를 저장할 변수
@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navi);
 
-        Intent successIntent = getIntent();
+        //Intent successIntent = getIntent();
 
-        if (successIntent.hasExtra("data")) {
-            account = (UserInfo) successIntent.getSerializableExtra("data");
-        }
+        //if (successIntent.hasExtra("data")) {
+        //    account = (UserInfo) successIntent.getSerializableExtra("data");
+        //}
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity
         mAdapter.addItem(getResources().getDrawable(R.drawable.cameraimg), "메모 1", "2016-01-05");
         mAdapter.addItem(getResources().getDrawable(R.drawable.cameraimg), "메모 1", "2016-01-05");
         mAdapter.addItem(getResources().getDrawable(R.drawable.cameraimg), "메모 1", "2016-01-05");
+
+//        GetMemo getMemo = new GetMemo(account.getId());
+//        getMemo.execute();
     }
 
     /**
@@ -278,6 +281,8 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("imagePath", file.getAbsolutePath().toString());
                     startActivity(intent);
 
+                    //옮겨야 할 부분!
+
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
                     tbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
                     mbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //mopology
@@ -289,7 +294,6 @@ public class MainActivity extends AppCompatActivity
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
 
-                    //imgview.setImageBitmap(tbitmap);
                     break;
 
                 case PICK_FROM_GALLERY:
@@ -302,7 +306,7 @@ public class MainActivity extends AppCompatActivity
                     options2.inSampleSize = 4;
                     photo = BitmapFactory.decodeFile(selectedImagePath, options2);
 
-                    intent.putExtra("imagePath",selectedImagePath);
+                    intent.putExtra("imagePath", selectedImagePath);
                     startActivity(intent);
 
                     gbitmap = Bitmap.createBitmap(photo.getWidth(), photo.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
@@ -314,7 +318,6 @@ public class MainActivity extends AppCompatActivity
                     seperateLetter(tbitmap);
                     convertForShow(tbitmap, rbitmap);
                     SaveImage(rbitmap);
-                    //imgview.setImageBitmap(tbitmap);
 
                     break;
 
@@ -326,14 +329,16 @@ public class MainActivity extends AppCompatActivity
     } //onActivityResult 종료
 
     private void SaveImage(Bitmap bitmapimg) {
+        Intent gintent = new Intent(this,GroupingActivity.class);
+
         File myDir = new File("/sdcard/SSMemo_folder");
         myDir.mkdirs();
         Random generator = new Random();
         int n = 10000;
         n = generator.nextInt(n);
-
         String fname = "Image-" + n + ".jpg";
         File file = new File(myDir, fname);
+
 
         /* 이미지 서버 전송 시작
          * @Usage
@@ -344,13 +349,13 @@ public class MainActivity extends AppCompatActivity
          * userId 디렉터리에 fname 으로 저장
          * 거기 들어가서 이미지 파일 클릭하면 볼 수 있음!
          */
-        SaveToServer server = new SaveToServer(myDir, fname, account.getId());
-        try {
-            server.execute(new URL("http://210.118.64.177"));
-        } catch (MalformedURLException e) {
-            Log.d("FTP", "SaveImage.server.execute : Execute Error!");
-        }
-        //이미지 서버 전송 끝
+//        SaveToServer server = new SaveToServer(myDir, fname, account.getId());
+//        try {
+//            server.execute(new URL("http://210.118.64.177"));
+//        } catch (MalformedURLException e) {
+//            Log.d("FTP", "SaveImage.server.execute : Execute Error!");
+//        }
+//        //이미지 서버 전송 끝
 
         if (file.exists()) file.delete();
 
@@ -365,6 +370,9 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //전처리된 이미지의 경로.
+        convertedFilePath = file.getAbsolutePath().toString();
     }
 
     private File getTempFile(Context context) {
@@ -391,11 +399,11 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navi, menu);
 
-        TextView user_disPlayname = (TextView) findViewById(R.id.user_displayName);
-        user_disPlayname.setText(account.getDisplayName());
+//        TextView user_disPlayname = (TextView) findViewById(R.id.user_displayName);
+//        user_disPlayname.setText(account.getDisplayName());
 
-        TextView user_email = (TextView) findViewById(R.id.user_email);
-        user_email.setText(account.getEmail());
+//        TextView user_email = (TextView) findViewById(R.id.user_email);
+//        user_email.setText(account.getEmail());
         return true;
     }
 

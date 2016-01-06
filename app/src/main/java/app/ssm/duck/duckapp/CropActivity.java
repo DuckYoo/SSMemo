@@ -35,14 +35,14 @@ public class CropActivity extends AppCompatActivity {
     private LinearLayout.LayoutParams params;
     private android.widget.Button btn;
     boolean dragcoordi = false, croppedflg = false; int refIdx = 0;
-    String image_path;
+    String image_path; String clickedBtn;
     Bitmap bitmapimg,resizedbitmap;
     Matrix matrix;
 
+    //crop영역 좌표.
     float x1 = 0, x2 = 0, x3 = 0, x4 = 0;
     float y1 = 0, y2 = 0, y3 = 0, y4 = 0;
 
-//    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,23 +57,22 @@ public class CropActivity extends AppCompatActivity {
         vlayout.setBackgroundColor(Color.BLACK);
 
         final LinearLayout hlayout = new LinearLayout(this);
-        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        hlayout.setLayoutParams(params);
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
         hlayout.setOrientation(LinearLayout.HORIZONTAL);
 
         Button cropBtn = new Button(this);
-        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         cropBtn.setLayoutParams(params);
-        cropBtn.setGravity(Gravity.CENTER);
-        cropBtn.setText("CROP");
+        clickedBtn = getString(R.string.cropstr);
+        cropBtn.setText(clickedBtn);
         cropBtn.setId(id + 0);
 
-        Button skipBtn = new Button(this);
+        final Button skipBtn = new Button(this);
         skipBtn.setLayoutParams(params);
-        skipBtn.setGravity(Gravity.CENTER);
-        skipBtn.setText("OKAY");
+        clickedBtn = getString(R.string.skipstr);
+        skipBtn.setText(clickedBtn);
         skipBtn.setId(id + 1);
 
+        //레이아웃에 custom View를 추가.
         cview = new cropView(this);
         params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         cview.setLayoutParams(params);
@@ -90,17 +89,24 @@ public class CropActivity extends AppCompatActivity {
         //버튼 클릭 이벤트.
         cropBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast toast = Toast.makeText(v.getContext(), "cropClicked", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(v.getContext(),R.string.cropstr, Toast.LENGTH_LONG);
                 toast.show();
                 cropping(cview);
                 hlayout.removeView(v);
+                clickedBtn = getString(R.string.confirmstr);
+                skipBtn.setText(clickedBtn);
             }
         });
 
         skipBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast toast = Toast.makeText(v.getContext(), "skipClicked", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(v.getContext(), clickedBtn , Toast.LENGTH_LONG);
                 toast.show();
+
+               // Intent gintent = new Intent(CropActivity.this,GroupingActivity.class);
+                //gintent.putExtra("convertedImagePath",convertedFilePath);
+                //startActivity(gintent);
+                finish();
             }
         });
 
