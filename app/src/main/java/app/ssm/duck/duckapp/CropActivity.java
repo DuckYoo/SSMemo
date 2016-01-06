@@ -35,7 +35,8 @@ public class CropActivity extends AppCompatActivity {
     private LinearLayout.LayoutParams params;
     private android.widget.Button btn;
     boolean dragcoordi = false, croppedflg = false; int refIdx = 0;
-    String image_path; String clickedBtn;
+    private boolean btnPressed = false;
+    String image_path; String buttonTxt;
     Bitmap bitmapimg,resizedbitmap;
     Matrix matrix;
 
@@ -60,16 +61,16 @@ public class CropActivity extends AppCompatActivity {
         params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
         hlayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        Button cropBtn = new Button(this);
+        final Button cropBtn = new Button(this);
         cropBtn.setLayoutParams(params);
-        clickedBtn = getString(R.string.cropstr);
-        cropBtn.setText(clickedBtn);
+        buttonTxt = getString(R.string.diversion_string);
+        cropBtn.setText(buttonTxt);
         cropBtn.setId(id + 0);
 
         final Button skipBtn = new Button(this);
         skipBtn.setLayoutParams(params);
-        clickedBtn = getString(R.string.skipstr);
-        skipBtn.setText(clickedBtn);
+        buttonTxt = getString(R.string.skip_string);
+        skipBtn.setText(buttonTxt);
         skipBtn.setId(id + 1);
 
         //레이아웃에 custom View를 추가.
@@ -89,21 +90,42 @@ public class CropActivity extends AppCompatActivity {
         //버튼 클릭 이벤트.
         cropBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast toast = Toast.makeText(v.getContext(),R.string.cropstr, Toast.LENGTH_LONG);
-                toast.show();
-                cropping(cview);
-                hlayout.removeView(v);
-                clickedBtn = getString(R.string.confirmstr);
-                skipBtn.setText(clickedBtn);
+                String str;
+                if(btnPressed == false){
+                    //눌린 버튼 정보를 Toast로 띄워주고.
+                    str = getString(R.string.crop_string);
+                    Toast toast = Toast.makeText(v.getContext(),str, Toast.LENGTH_LONG);
+                    toast.show();
+                    //diversion에서 crop버튼으로 text를 바꿔준다.
+                    buttonTxt = getString(R.string.crop_string);
+                    cropBtn.setText(buttonTxt);
+
+                    //customView를 채워준다.
+                    cropping(cview);
+                    btnPressed = true;
+
+                }else if(btnPressed == true){
+                    buttonTxt = getString(R.string.confirm_string);
+                    Toast toast = Toast.makeText(v.getContext(),buttonTxt, Toast.LENGTH_LONG);
+                    toast.show();
+                    skipBtn.setText(buttonTxt);
+
+                    //crop과정이 끝났으므로 버튼을 제거한다.
+                    hlayout.removeView(v);
+
+                   //customView를 채워준다.
+                    cutting(cview);
+                }
+
             }
         });
 
         skipBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast toast = Toast.makeText(v.getContext(), clickedBtn , Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(v.getContext(), buttonTxt , Toast.LENGTH_LONG);
                 toast.show();
-
-               // Intent gintent = new Intent(CropActivity.this,GroupingActivity.class);
+                //crop을 끝냈으므로 화면을 전환한다.
+                //Intent gintent = new Intent(CropActivity.this,GroupingActivity.class);
                 //gintent.putExtra("convertedImagePath",convertedFilePath);
                 //startActivity(gintent);
                 finish();
@@ -112,15 +134,37 @@ public class CropActivity extends AppCompatActivity {
 
     }
 
+    //사용자가 지정한 영역을 실제로 자르는 함수.
+   public void cutting(View v){
+       v.destroyDrawingCache();
+       v.bringToFront();
 
+       int cw = (int)getWidth();
+       int ch = (int)getHeight();
+
+       try{
+               Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, (int)x1+5, (int)y1+5, cw, ch);
+               if (bitmapimg != cuttedbitmap) {
+                   bitmapimg.recycle();
+                   bitmapimg = cuttedbitmap;
+           }
+       }catch (OutOfMemoryError e){
+
+       }
+       croppedflg = true;
+       v.invalidate();
+   }
+
+
+    //crop을 위해 bitmap을 왜곡하는 함수.
     public void cropping(View v){
         //화면에 더이상 그만 그림.
         v.destroyDrawingCache();
         v.bringToFront();
 
         //crop한 영역의 width와 height를 결정
-        int cw = (int)getWidth();
-        int ch = (int)getHeight();
+        int cw = (int)getWidth()+10;
+        int ch = (int)getHeight()+10;
 
         //crop된 이미지를 보여준다.
 
@@ -148,10 +192,6 @@ public class CropActivity extends AppCompatActivity {
         }catch (OutOfMemoryError e){
 
         }
-
-        //crop된 이미지를 canvas에 그린다.
-        //canvas.drawBitmap(bitmapimg, 0, srtHeight, null);
-        croppedflg = true;
         v.invalidate();
 
     }

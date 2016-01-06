@@ -12,9 +12,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_navi">NaviActivity</string>
 
-    <string name="cropstr">CROP</string>
-    <string name="skipstr">SKIP</string>
-    <string name="confirmstr">CONFIRM</string>
+    <string name="diversion_string">DIVERSION</string>
+    <string name="crop_string">CROP</string>
+    <string name="skip_string">SKIP</string>
+    <string name="confirm_string">CONFIRM</string>
 
     <string name="set_string">SET</string>
     <string name="okay_string">OKAY</string>
