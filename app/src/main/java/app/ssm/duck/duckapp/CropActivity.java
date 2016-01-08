@@ -2,6 +2,7 @@ package app.ssm.duck.duckapp;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,8 +14,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,10 +26,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class CropActivity extends AppCompatActivity {
     int rotateFlag = 0;  int id = 0;
@@ -39,10 +50,23 @@ public class CropActivity extends AppCompatActivity {
     String image_path; String buttonTxt;
     Bitmap bitmapimg,resizedbitmap;
     Matrix matrix;
+    UserInfo account;
+
+    ArrayList<String> memolist = new ArrayList<String>();
 
     //crop영역 좌표.
     float x1 = 0, x2 = 0, x3 = 0, x4 = 0;
     float y1 = 0, y2 = 0, y3 = 0, y4 = 0;
+
+    //native 함수 부
+    static {
+        System.loadLibrary("NDKTest");
+    }
+
+    public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap, Bitmap mbitmap);
+    public native void convertForShow(Bitmap bitmap, Bitmap rbitmap);
+    public native void seperateLetter(Bitmap bitmap);
+    //
 
 
     @Override
@@ -113,8 +137,10 @@ public class CropActivity extends AppCompatActivity {
                     //crop과정이 끝났으므로 버튼을 제거한다.
                     hlayout.removeView(v);
 
-                   //customView를 채워준다.
+                    //customView를 채워준다.
                     cutting(cview);
+                    convertBitmapWithJni(bitmapimg);
+                    //makeFolder();
                 }
 
             }
@@ -134,28 +160,61 @@ public class CropActivity extends AppCompatActivity {
 
     }
 
+    public void makeFolder(){
+
+        //account를 여기서 받아오면 됨!
+
+        View dialog = View.inflate(getApplicationContext(), R.layout.input_memo_name, null);
+        final AlertDialog ad = new AlertDialog.Builder(CropActivity.this).setView(dialog).create();
+        final EditText folderName = (EditText) dialog.findViewById(R.id.folderName);
+        dialog.findViewById(R.id.completeButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (folderName.getText().toString().length() == 0) {
+
+                } else {
+                    InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId());
+
+                    insertMemo.execute("http://210.118.64.177/android/insert.php");
+                    ad.hide();
+
+                    Toast.makeText(CropActivity.this, "메모가 생성되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        ad.show();
+    }
+
     /**
      * 사용자가 지정한 영역을 실제로 자르는 함수
      */
-   public void cutting(View v){
-       v.destroyDrawingCache();
-       v.bringToFront();
+    public void cutting(View v){
+        v.destroyDrawingCache();
+        v.bringToFront();
 
-       int cw = (int)getWidth();
-       int ch = (int)getHeight();
+        int srtx = (int)x1;
+        int srty = (int)y1;
 
-       try{
-               Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, (int)x1+5, (int)y1+5, cw, ch);
-               if (bitmapimg != cuttedbitmap) {
-                   bitmapimg.recycle();
-                   bitmapimg = cuttedbitmap;
-           }
-       }catch (OutOfMemoryError e){
+        int cw = (int)getWidth();
+        int ch = (int)getHeight();
 
-       }
-       croppedflg = true;
-       v.invalidate();
-   }
+        Log.d("TAG","x1:"+srtx+"x2"+srty+"srtHeight:"+srtHeight);
+
+        try{
+            if(rotateFlag == 2 || rotateFlag == 0){
+                srty = srty-(int)srtHeight;
+            }
+            Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, srtx+5, srty+5, cw, ch);
+            if (bitmapimg != cuttedbitmap) {
+                bitmapimg.recycle();
+                bitmapimg = cuttedbitmap;
+            }
+        }catch (OutOfMemoryError e){
+
+        }
+        croppedflg = true;
+        v.invalidate();
+    }
 
 
     /**
@@ -167,12 +226,13 @@ public class CropActivity extends AppCompatActivity {
         v.bringToFront();
 
         //crop한 영역의 width와 height를 결정
-        int cw = (int)getWidth()+10;
-        int ch = (int)getHeight()+10;
+        int cw = (int)getWidth();
+        int ch = (int)getHeight();
 
 
         float[] src = new float[] {x1,y1,x4,y4,x3,y3,x2,y2};
-        float[] dst = new float[] {x1,y1,x1+cw,y1,x1+cw,y1+ch,x1,y1+ch};
+        float[] dst = new float[] {0,0,resizedbitmap.getWidth(),0,resizedbitmap.getWidth(),resizedbitmap.getHeight(),0,resizedbitmap.getHeight()};
+        //float[] dst = new float[] {x1,y1,x1+cw,y1,x1+cw,y1+ch,x1,y1+ch};
 
         matrix = new Matrix();
         matrix.setPolyToPoly(src, 0, dst, 0, src.length >> 1);
@@ -407,10 +467,15 @@ public class CropActivity extends AppCompatActivity {
      */
     private void rotateBitmapImage(int degree){
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
+        Bitmap bm = BitmapFactory.decodeFile(image_path);
 
-        bitmapimg = BitmapFactory.decodeFile(image_path,options);
+        if(bm.getWidth() > 3000 || bm.getHeight() > 3000) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 2;
+            bitmapimg = BitmapFactory.decodeFile(image_path, options);
+        }else{
+            bitmapimg = bm;
+        }
 
         if(degree != 0 && bitmapimg != null){
             Matrix m = new Matrix();
@@ -433,6 +498,7 @@ public class CropActivity extends AppCompatActivity {
     public int getImageRotatedDegree(){
         int degree = 0;
         image_path = getIntent().getStringExtra("imagePath");
+        account = (UserInfo) getIntent().getSerializableExtra("data");
         ExifInterface exif = null;
 
         try{
@@ -464,5 +530,67 @@ public class CropActivity extends AppCompatActivity {
         }
         return degree;
     }
+
+    private void SaveImage(Bitmap bitmap) {
+        //String ex_storage = Environment.getExternalStorageDirectory().getAbsolutePath();
+        //File myDir = new File(ex_storage);
+        File myDir = new File("/sdcard/SSMemo_folder");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+
+        /* 이미지 서버 전송 시작
+         * @Usage
+         * 파일 확인 방법
+         * 브라우저를 열고
+         * ftp://210.118.64.177 접속
+         * images 디렉터리에 들어가면
+         * userId 디렉터리에 fname 으로 저장
+         * 거기 들어가서 이미지 파일 클릭하면 볼 수 있음!
+         */
+        SaveToServer server = new SaveToServer(myDir, fname, account.getId());
+        try {
+            server.execute(new URL("http://210.118.64.177"));
+        } catch (MalformedURLException e) {
+            Log.d("FTP", "SaveImage.server.execute : Execute Error!");
+        }
+        //이미지 서버 전송 끝
+
+        if (file.exists()) file.delete();
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file)));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //여기서 경로를 받아서 List에 추가해주기!
+        //String str = file.getAbsolutePath().toString();
+    }
+
+    protected void convertBitmapWithJni(Bitmap bitmap){
+        Bitmap gbitmap, tbitmap, mbitmap, rbitmap;
+
+        gbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
+        tbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
+        mbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //mopology
+        rbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888); //showimage
+
+        convertImage(bitmap, gbitmap, tbitmap, mbitmap);
+        seperateLetter(tbitmap);
+        convertForShow(tbitmap, rbitmap);
+        SaveImage(rbitmap);
+    }
+
+
 }
 

@@ -47,7 +47,7 @@ dependencies {
     compile files('lib/commons-net-3.4.jar')
     compile 'com.google.apis:google-api-services-oauth2:v1-rev100-1.21.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
-
+    compile files('lib/json_simple-1.1.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

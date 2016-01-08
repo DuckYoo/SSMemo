@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
@@ -97,8 +98,7 @@ void getLetterBoundary(AndroidBitmapInfo* info, int H1){
                     }
                 }
 
-                //.점일경우
-                // ""따온표일 경우
+                //ㅅ우 또는 ㅇ 일 경
 
             }else if( *(data+x+(y-1)*info->width)==255 && *(data+x+y*info->width)==0){
                 y = wEY-1;
@@ -206,7 +206,7 @@ void getLineInfo(AndroidBitmapInfo* info) {
 
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_seperateLetter(JNIEnv *env, jobject obj, jobject bitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_seperateLetter(JNIEnv *env, jobject obj, jobject bitmap) {
     AndroidBitmapInfo info;
 
     LOGE("Start to seperate Letter!");

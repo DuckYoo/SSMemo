@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
@@ -14,6 +15,6 @@ typedef struct {
     uint8_t blue;
 } argb;
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_morphology(JNIEnv *env, jobject obj, jobject original, jobject convertedimg) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_morphology(JNIEnv *env, jobject obj, jobject original, jobject convertedimg) {
 
 }

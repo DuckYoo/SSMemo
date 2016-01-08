@@ -1,9 +1,10 @@
 obj/local/armeabi-v7a/objs/NDKTest/main.o: jni/main.cpp \
- jni/app_ssm_duck_duckapp_MainActivity.h \
+ jni/app_ssm_duck_duckapp_CropActivity.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/jni.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/sys/cdefs.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/android/api-level.h \
+ jni/app_ssm_duck_duckapp_CropActivity_cropView.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/android/log.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/math.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/sys/types.h \
@@ -27,7 +28,7 @@ obj/local/armeabi-v7a/objs/NDKTest/main.o: jni/main.cpp \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/asm/page.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/android/bitmap.h
 
-jni/app_ssm_duck_duckapp_MainActivity.h:
+jni/app_ssm_duck_duckapp_CropActivity.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/jni.h:
 
@@ -36,6 +37,8 @@ jni/app_ssm_duck_duckapp_MainActivity.h:
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/sys/cdefs_elf.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/android/api-level.h:
+
+jni/app_ssm_duck_duckapp_CropActivity_cropView.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-8/arch-arm/usr/include/android/log.h:
 

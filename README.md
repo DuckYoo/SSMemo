@@ -6,7 +6,7 @@
 
 **동영상 링크**
 
-**PT 링크**
+https://youtu.be/RugWlkx1tio
 
 **웹 프로젝트 Github Url**
 

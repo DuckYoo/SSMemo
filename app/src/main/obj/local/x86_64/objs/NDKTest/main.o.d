@@ -1,9 +1,10 @@
 obj/local/x86_64/objs/NDKTest/main.o: jni/main.cpp \
- jni/app_ssm_duck_duckapp_MainActivity.h \
+ jni/app_ssm_duck_duckapp_CropActivity.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/jni.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/sys/cdefs.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/sys/cdefs_elf.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/android/api-level.h \
+ jni/app_ssm_duck_duckapp_CropActivity_cropView.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/android/log.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/math.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/limits.h \
@@ -14,7 +15,7 @@ obj/local/x86_64/objs/NDKTest/main.o: jni/main.cpp \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/stdint.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/machine/wchar_limits.h
 
-jni/app_ssm_duck_duckapp_MainActivity.h:
+jni/app_ssm_duck_duckapp_CropActivity.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/jni.h:
 
@@ -23,6 +24,8 @@ jni/app_ssm_duck_duckapp_MainActivity.h:
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/sys/cdefs_elf.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/android/api-level.h:
+
+jni/app_ssm_duck_duckapp_CropActivity_cropView.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-21/arch-x86_64/usr/include/android/log.h:
 

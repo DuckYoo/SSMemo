@@ -1,9 +1,10 @@
 obj/local/mips/objs/NDKTest/main.o: jni/main.cpp \
- jni/app_ssm_duck_duckapp_MainActivity.h \
+ jni/app_ssm_duck_duckapp_CropActivity.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/jni.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/sys/cdefs.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/sys/cdefs_elf.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/android/api-level.h \
+ jni/app_ssm_duck_duckapp_CropActivity_cropView.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/android/log.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/math.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/sys/types.h \
@@ -28,7 +29,7 @@ obj/local/mips/objs/NDKTest/main.o: jni/main.cpp \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/asm/page.h \
  /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/android/bitmap.h
 
-jni/app_ssm_duck_duckapp_MainActivity.h:
+jni/app_ssm_duck_duckapp_CropActivity.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/jni.h:
 
@@ -37,6 +38,8 @@ jni/app_ssm_duck_duckapp_MainActivity.h:
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/sys/cdefs_elf.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/android/api-level.h:
+
+jni/app_ssm_duck_duckapp_CropActivity_cropView.h:
 
 /home/hyejung/Android/Sdk/ndk-bundle/platforms/android-9/arch-mips/usr/include/android/log.h:
 

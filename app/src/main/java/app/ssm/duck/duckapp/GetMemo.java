@@ -1,8 +1,13 @@
 package app.ssm.duck.duckapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.util.Log;
+import android.widget.ListView;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +20,27 @@ import java.net.URL;
  * Created by broDuck on 16. 1. 5.
  */
 public class GetMemo extends AsyncTask<String, Integer, String> {
-    String memo_id;
+    String user_id;
+    ListViewAdapter list;
+    ListView listView;
 
-    public GetMemo(String memo_id) {
-        this.memo_id = memo_id;
+    /**
+     * constructor
+     * @param user_id   user's id
+     * @param list      adapter object
+     * @param listView  ListView object
+     */
+    public GetMemo(String user_id, ListViewAdapter list, ListView listView) {
+        this.user_id = user_id;
+        this.list = list;
+        this.listView = listView;
     }
 
+    /**
+     * Async DB select from server
+     * @param params    nothing
+     * @return          nothing
+     */
     @Override
     protected String doInBackground(String... params) {
         getResult();
@@ -28,11 +48,14 @@ public class GetMemo extends AsyncTask<String, Integer, String> {
         return "hello";
     }
 
+    /**
+     * Http Connection Method
+     */
     public void getResult() {
 
         try {
-            URL url = new URL("http://210.118.64.177/android/getMemo.php?memo_id=" + memo_id);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            URL url = new URL("http://210.118.64.177/android/getMemo.php?user_id=" + user_id);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
 
             readStream(conn.getInputStream());
@@ -42,20 +65,34 @@ public class GetMemo extends AsyncTask<String, Integer, String> {
         }
     }
 
+    /**
+     * result for selected data add ListView
+     * @param in get InputStream to getResult.conn
+     */
     private void readStream(InputStream in) {
         BufferedReader reader = null;
 
         try {
             reader = new BufferedReader(new InputStreamReader(in));
             String line = "";
+            Object obj = new Object();
 
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
 
-                Log.d("DB", line);
+                obj = JSONValue.parse(line);
             }
 
-        } catch (IOException e) {
+            JSONObject object = (JSONObject) obj;
+
+            JSONArray array = (JSONArray) object.get("list");
+
+            for (int i = 0; i < array.size(); i++) {
+                object = (JSONObject) array.get(i);
+
+                list.addItem(R.drawable.cameraimg, object.get("memo_name").toString(), object.get("update_date").toString(), object.get("memo_hash").toString());
+            }
+        } catch (Exception e) {
             Log.d("DB", "GetMemo.readStram Error!");
         } finally {
             if (reader != null) {

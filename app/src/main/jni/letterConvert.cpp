@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
@@ -22,7 +23,7 @@ void getPixelInfo(AndroidBitmapInfo* binfo,AndroidBitmapInfo* ainfo, void* bpixe
 
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_seperateLetter(JNIEnv *env, jobject obj, jobject bitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_seperateLetter(JNIEnv *env, jobject obj, jobject bitmap) {
     AndroidBitmapInfo info;
     void* pixels;
 

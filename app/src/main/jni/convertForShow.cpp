@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
@@ -36,7 +37,7 @@ void convert(AndroidBitmapInfo* info, AndroidBitmapInfo* rinfo, void* pixels, vo
     }
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertForShow(JNIEnv *env, jobject obj, jobject bitmap,jobject rbitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertForShow(JNIEnv *env, jobject obj, jobject bitmap,jobject rbitmap) {
     AndroidBitmapInfo info;
     AndroidBitmapInfo rinfo;
     void* pixels;

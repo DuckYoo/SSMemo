@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
@@ -169,7 +170,7 @@ void convertB(AndroidBitmapInfo* info, AndroidBitmapInfo* binfo, void* pixels, v
     } // end of Otsu
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertToBin(JNIEnv *env, jobject obj, jobject original, jobject convertedimg) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertToBin(JNIEnv *env, jobject obj, jobject original, jobject convertedimg) {
     AndroidBitmapInfo info;
     AndroidBitmapInfo binfo;
     void* pixels;

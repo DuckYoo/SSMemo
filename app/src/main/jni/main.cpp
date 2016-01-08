@@ -1,4 +1,5 @@
-#include "app_ssm_duck_duckapp_MainActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity.h"
+#include "app_ssm_duck_duckapp_CropActivity_cropView.h"
 #include <jni.h>
 #include <android/log.h>
 #include "math.h"
@@ -15,9 +16,7 @@ typedef struct {
     uint8_t blue;
 } argb;
 
-/**
- * 원본 칼라 비트맵을 그레이 스케일로 변환하는 함수.
- */
+
 void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, void* gpixels){
 
     //current values
@@ -40,10 +39,6 @@ void reverse(AndroidBitmapInfo* info,AndroidBitmapInfo* ginfo, void* pixels, voi
         gpixels = (char *)gpixels + ginfo->stride;
     }
 }
-
-/**
- * 그레이 스케일의 비트맵을 이진화하는 함수.
- */
 void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels, void* tpixels) {
     uint8_t *gdata;
     uint8_t *tdata;
@@ -178,7 +173,7 @@ void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels,
                 }
                 if((min==max) && (min == 0))
                     *(tdata + x + y * tinfo->width) = 0;
-                if (*(gdata + x + y * ginfo->width) < (min + max + 14)/2 )
+                if (*(gdata + x + y * ginfo->width) < (min + max + 10)/2 )
                     *(tdata + x + y * tinfo->width) = 0;
                 else
                     *(tdata + x + y * tinfo->width) = 255;
@@ -296,7 +291,7 @@ void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels
     //아니면 0의 값을 반환
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_MainActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap, jobject tbitmap,jobject mbitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap, jobject tbitmap,jobject mbitmap) {
 
 
     AndroidBitmapInfo info;
