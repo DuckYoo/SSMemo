@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="hint">Search Tag</string>
     <string name="title_activity_crop">CropActivity</string>
+    <string name="title_activity_group">GroupingActivity</string>
     <string name="server_client_id">693226472118-6meg9uneh3ebnsvkt12oodk8capk3jfg.apps.googleusercontent.com</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

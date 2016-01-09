@@ -2,14 +2,18 @@ package app.ssm.duck.duckapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -41,7 +45,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -53,6 +57,7 @@ public class ListViewAdapter extends BaseAdapter {
             holder.mImage = (ImageView) convertView.findViewById(R.id.memo_image);
             holder.mName = (TextView) convertView.findViewById(R.id.memo_name);
             holder.mUpdate = (TextView) convertView.findViewById(R.id.update_date);
+            holder.mButton = (Button) convertView.findViewById(R.id.delete_memo);
 
             convertView.setTag(holder);
         } else {
@@ -61,9 +66,11 @@ public class ListViewAdapter extends BaseAdapter {
 
         final ListData mData = mListData.get(position);
 
-        if (mData.mImage != 0) {
+        if (mData.mImage != null) {
             holder.mImage.setVisibility(View.VISIBLE);
-            holder.mImage.setImageResource(mData.mImage);
+            Bitmap bm = BitmapFactory.decodeFile(mData.mImage);
+
+            holder.mImage.setImageBitmap(bm);
         } else {
             holder.mImage.setVisibility(View.GONE);
         }
@@ -81,20 +88,38 @@ public class ListViewAdapter extends BaseAdapter {
             }
         });
 
+        holder.mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteMemo deleteMemo = new DeleteMemo(mData.mHash);
+                deleteMemo.execute();
+
+                remove(position);
+
+                Toast.makeText(mContext, "메모가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return convertView;
     }
 
-    public void addItem(@DrawableRes int image, String mName, String mUpdate, String mHash) {
+    public void addItem(String image, String mName, String mUpdate, String mHash, int key) {
         ListData addInfo = new ListData();
         addInfo.mImage = image;
         addInfo.mName = mName;
         addInfo.mUpdate = mUpdate;
         addInfo.mHash = mHash;
 
-        mListData.add(addInfo);
+        if (key == 0) {
+            mListData.add(addInfo);
+        } else {
+            mListData.add(0, addInfo);
+        }
     }
 
     public void remove(int position) {
         mListData.remove(position);
+        notifyDataSetChanged();
     }
+
 }

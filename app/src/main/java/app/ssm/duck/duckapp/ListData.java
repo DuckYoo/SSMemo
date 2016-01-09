@@ -12,7 +12,7 @@ public class ListData {
      */
 
     // 메모 미리보기
-    public @DrawableRes int mImage;
+    public String mImage;
 
     // 제목
     public String mName;

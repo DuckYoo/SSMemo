@@ -32,7 +32,14 @@
             android:name=".CropActivity"
             android:label="@string/title_activity_crop"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".WebActivity"></activity>
+
+
+        <activity android:name=".GroupingActivity"
+            android:label="@string/title_activity_group"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

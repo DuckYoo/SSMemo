@@ -57,7 +57,7 @@
                 android:background="@drawable/galleryimg"
                 android:onClick="mOnClick"
                 sl:scale_height="60"
-                sl:scale_left="0"
+                sl:scale_left="55"
                 sl:scale_textsize="15"
                 sl:scale_top="0"
                 sl:scale_width="60" />
@@ -71,24 +71,11 @@
                 android:background="@drawable/cameraimg"
                 android:onClick="mOnClick"
                 sl:scale_height="60"
-                sl:scale_left="120"
+                sl:scale_left="185"
                 sl:scale_textsize="15"
                 sl:scale_top="0"
                 sl:scale_width="60" />
 
-            <!-- 폴더 추가 버튼 -->
-            <Button
-                android:id="@+id/btn_add_folder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/fileimg"
-                android:onClick="mOnClick"
-                sl:scale_height="60"
-                sl:scale_left="240"
-                sl:scale_textsize="15"
-                sl:scale_top="0"
-                sl:scale_width="60" />
 
         </com.ssomai.android.scalablelayout.ScalableLayout>
 

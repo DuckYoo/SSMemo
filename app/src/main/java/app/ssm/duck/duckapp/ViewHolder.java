@@ -4,6 +4,7 @@ package app.ssm.duck.duckapp;
  * Created by hjson on 16. 1. 6.
  */
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,4 +15,5 @@ public class ViewHolder {
     public ImageView mImage;
     public TextView mName;
     public TextView mUpdate;
+    public Button mButton;
 }

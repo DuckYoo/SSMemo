@@ -41,18 +41,17 @@ import java.util.Random;
 
 public class CropActivity extends AppCompatActivity {
     int rotateFlag = 0;  int id = 0;
-    int nwidth=0, nheight=0; float srtHeight = 0 , endHeight = 0;
+    int nwidth=0, nheight=0; float srtHeight = 0 , endHeight = 0; int cwidth=0, cheight=0;
     private cropView cview;
     private LinearLayout.LayoutParams params;
     private android.widget.Button btn;
-    boolean dragcoordi = false, croppedflg = false; int refIdx = 0;
+    boolean dragcoordi = false, croppedflg = false, initrange = true;
+    int refIdx = 0;
     private boolean btnPressed = false;
     String image_path; String buttonTxt;
     Bitmap bitmapimg,resizedbitmap;
     Matrix matrix;
     UserInfo account;
-
-    ArrayList<String> memolist = new ArrayList<String>();
 
     //crop영역 좌표.
     float x1 = 0, x2 = 0, x3 = 0, x4 = 0;
@@ -114,12 +113,7 @@ public class CropActivity extends AppCompatActivity {
         //버튼 클릭 이벤트.
         cropBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                String str;
                 if(btnPressed == false){
-                    //눌린 버튼 정보를 Toast로 띄워주고.
-                    str = getString(R.string.crop_string);
-                    Toast toast = Toast.makeText(v.getContext(),str, Toast.LENGTH_LONG);
-                    toast.show();
                     //diversion에서 crop버튼으로 text를 바꿔준다.
                     buttonTxt = getString(R.string.crop_string);
                     cropBtn.setText(buttonTxt);
@@ -130,8 +124,6 @@ public class CropActivity extends AppCompatActivity {
 
                 }else if(btnPressed == true){
                     buttonTxt = getString(R.string.confirm_string);
-                    Toast toast = Toast.makeText(v.getContext(),buttonTxt, Toast.LENGTH_LONG);
-                    toast.show();
                     skipBtn.setText(buttonTxt);
 
                     //crop과정이 끝났으므로 버튼을 제거한다.
@@ -140,7 +132,6 @@ public class CropActivity extends AppCompatActivity {
                     //customView를 채워준다.
                     cutting(cview);
                     convertBitmapWithJni(bitmapimg);
-                    //makeFolder();
                 }
 
             }
@@ -148,41 +139,27 @@ public class CropActivity extends AppCompatActivity {
 
         skipBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast toast = Toast.makeText(v.getContext(), buttonTxt , Toast.LENGTH_LONG);
-                toast.show();
-                //crop을 끝냈으므로 화면을 전환한다.
-                //Intent gintent = new Intent(CropActivity.this,GroupingActivity.class);
-                //gintent.putExtra("convertedImagePath",convertedFilePath);
-                //startActivity(gintent);
-                finish();
-            }
-        });
+                String str;
+                if(btnPressed == false){
+                    x1 = 0; x2 = 0; x3= 0; x4 = 0;
 
-    }
+                    //diversion에서 crop버튼으로 text를 바꿔준다.
+                    buttonTxt = getString(R.string.crop_string);
+                    cropBtn.setText(buttonTxt);
 
-    public void makeFolder(){
-
-        //account를 여기서 받아오면 됨!
-
-        View dialog = View.inflate(getApplicationContext(), R.layout.input_memo_name, null);
-        final AlertDialog ad = new AlertDialog.Builder(CropActivity.this).setView(dialog).create();
-        final EditText folderName = (EditText) dialog.findViewById(R.id.folderName);
-        dialog.findViewById(R.id.completeButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (folderName.getText().toString().length() == 0) {
-
-                } else {
-                    InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId());
-
-                    insertMemo.execute("http://210.118.64.177/android/insert.php");
-                    ad.hide();
-
-                    Toast.makeText(CropActivity.this, "메모가 생성되었습니다.", Toast.LENGTH_SHORT).show();
+                    //customView를 채워준다.
+                    cropping(cview);
+                    btnPressed = true;
+                }else {
+                    //crop을 끝냈으므로 화면을 전환한다.
+                    Intent intent = new Intent();
+                    intent.putExtra("SUCCESS", 4321);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });
-        ad.show();
+
     }
 
     /**
@@ -198,13 +175,11 @@ public class CropActivity extends AppCompatActivity {
         int cw = (int)getWidth();
         int ch = (int)getHeight();
 
-        Log.d("TAG","x1:"+srtx+"x2"+srty+"srtHeight:"+srtHeight);
-
         try{
             if(rotateFlag == 2 || rotateFlag == 0){
                 srty = srty-(int)srtHeight;
             }
-            Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, srtx+5, srty+5, cw, ch);
+            Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, srtx, srty, cw, ch);
             if (bitmapimg != cuttedbitmap) {
                 bitmapimg.recycle();
                 bitmapimg = cuttedbitmap;
@@ -225,14 +200,9 @@ public class CropActivity extends AppCompatActivity {
         v.destroyDrawingCache();
         v.bringToFront();
 
-        //crop한 영역의 width와 height를 결정
-        int cw = (int)getWidth();
-        int ch = (int)getHeight();
-
 
         float[] src = new float[] {x1,y1,x4,y4,x3,y3,x2,y2};
         float[] dst = new float[] {0,0,resizedbitmap.getWidth(),0,resizedbitmap.getWidth(),resizedbitmap.getHeight(),0,resizedbitmap.getHeight()};
-        //float[] dst = new float[] {x1,y1,x1+cw,y1,x1+cw,y1+ch,x1,y1+ch};
 
         matrix = new Matrix();
         matrix.setPolyToPoly(src, 0, dst, 0, src.length >> 1);
@@ -294,7 +264,7 @@ public class CropActivity extends AppCompatActivity {
         }
 
         public cropView(Context context, AttributeSet attrs){
-            super(context,attrs);
+            super(context, attrs);
             paint.setColor(Color.BLACK);
             paint.setStrokeWidth(10);
             paint.setAntiAlias(true);
@@ -304,19 +274,21 @@ public class CropActivity extends AppCompatActivity {
 
         public boolean onTouchEvent(MotionEvent event){
             super.onTouchEvent(event);
-            //터치된 좌표를 받아오는 변수
             float pressedX,pressedY;
+
             //화면이 터치됬을 경우엔 좌표를 확인한다.
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 pressedX = event.getX();
                 pressedY = event.getY();
                 compareToCoordi(pressedX,pressedY);
             }
+
             if(event.getAction() == MotionEvent.ACTION_MOVE){
                 if(dragcoordi == true){
                     dragCoordi(event.getX(),event.getY());
                 }
             }
+
             if(event.getAction() == MotionEvent.ACTION_UP){
                 dragcoordi = false;
                 refIdx = 0;
@@ -331,10 +303,15 @@ public class CropActivity extends AppCompatActivity {
          */
         public void compareToCoordi(float x,float y){
 
-            if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
-                dragcoordi = false;
-                return;
+            if(btnPressed == true){
+                dragcoordi = true;
+            }else{
+                if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
+                    dragcoordi = false;
+                    return;
+                }
             }
+
             //좌표가 사각형의 코너와 일치하면.
             if( x>= x1-50 && x <= x1+50 && y>= y1-50 && y <= y1+50 ){
                 dragcoordi = true;
@@ -364,24 +341,54 @@ public class CropActivity extends AppCompatActivity {
          */
         public void dragCoordi(float x, float y){
             //범위를 벗어날 경우엔 자신 그대로.
-            if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
-                dragcoordi = false;
-                return;
-            }
-            if(refIdx == 1){
-                x1 = x;
-                y1 = y;
-            }else if(refIdx == 2){
-                x2 = x;
-                y2 = y;
-            }else if(refIdx == 3){
-                x3 = x;
-                y3 = y;
-            }else if(refIdx == 4){
-                x4 = x;
-                y4 = y;
+            if(btnPressed == true){
+                dragcoordi = true;
+
+                if(refIdx == 1){
+                    x1 = x;
+                    y1 = y;
+                    x2 = x;
+                    y4 = y;
+                }else if(refIdx == 2){
+                    x2 = x;
+                    y2 = y;
+                    x1 = x;
+                    y3 = y;
+                }else if(refIdx == 3){
+                    x3 = x;
+                    y3 = y;
+                    x4 = x;
+                    y2 = y;
+                }else if(refIdx == 4){
+                    x4 = x;
+                    y4 = y;
+                    x3 = x;
+                    y1 = y;
+                }
+
+            }else{
+                if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
+                    dragcoordi = false;
+                    return;
+                }
+
+                if(refIdx == 1){
+                    x1 = x;
+                    y1 = y;
+                }else if(refIdx == 2){
+                    x2 = x;
+                    y2 = y;
+                }else if(refIdx == 3){
+                    x3 = x;
+                    y3 = y;
+                }else if(refIdx == 4){
+                    x4 = x;
+                    y4 = y;
+                }
             }
         }
+
+
 
         /**
          * cropView의 Canvas에 Bitmap과 crop영역을 그려주는 함수.
@@ -390,23 +397,28 @@ public class CropActivity extends AppCompatActivity {
             super.onDraw(canvas);
             canvas.drawColor(Color.BLACK);
 
-            Path path = new Path();
+            cwidth = canvas.getWidth();
+            cheight = canvas.getHeight();
+
             paint.setAntiAlias(true);
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(10);
 
+            //
+
+
             //비트맵의 회전 정도에 따라 캔버스에 비율을 맞춰서 그려준다.
             if (rotateFlag == 1 || rotateFlag == 3) {
-                nwidth = canvas.getWidth();
-                nheight = canvas.getHeight();
+                nwidth = cwidth;
+                nheight = cheight;
                 backbitmap = Bitmap.createScaledBitmap(bitmapimg, nwidth, nheight, false);
                 srtHeight = 0;
                 endHeight = nheight;
                 canvas.drawBitmap(backbitmap, 0, srtHeight, null);
             } else {
-                nwidth = canvas.getWidth();
-                nheight = (canvas.getHeight() * canvas.getWidth()) / bitmapimg.getWidth();
+                nwidth = cwidth;
+                nheight = (cheight * cwidth) / bitmapimg.getWidth();
                 backbitmap = Bitmap.createScaledBitmap(bitmapimg, nwidth, nheight, false);
                 srtHeight = (canvas.getHeight() - nheight) / 2;
                 endHeight = srtHeight + nheight;
@@ -415,9 +427,10 @@ public class CropActivity extends AppCompatActivity {
             resizedbitmap = backbitmap;
 
             //crop할 사각형 영역을 그려준다
-            if(croppedflg == false){
+            if(btnPressed == false && croppedflg == false){
                 setCropRange(canvas);
-            }else{
+            }else if(btnPressed == true && croppedflg == false){
+                setCropRecRange(canvas);
             }
         }
     }
@@ -426,6 +439,7 @@ public class CropActivity extends AppCompatActivity {
      * crop영역을 지정하고 그려주는 함수.
      */
     void setCropRange(Canvas canvas){
+
         Paint paint = new Paint();
         Path path = new Path();
         paint.setAntiAlias(true);
@@ -460,6 +474,47 @@ public class CropActivity extends AppCompatActivity {
         path.close();
         canvas.drawPath(path,paint);
     }
+
+
+    void setCropRecRange(Canvas canvas){
+        Paint paint = new Paint();
+        Path path = new Path();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+
+        //crop영역의 초기화
+        if(initrange == true){
+            x1 = canvas.getWidth()/2 - 200;
+            x2 = canvas.getWidth()/2 - 200;
+            x3 = canvas.getWidth()/2 + 200;
+            x4 = canvas.getWidth()/2 + 200;
+
+            y1 = canvas.getHeight()/2 - 200;
+            y2 = canvas.getHeight()/2 + 200;
+            y3 = canvas.getHeight()/2 + 200;
+            y4 = canvas.getHeight()/2 - 200;
+
+            initrange = false;
+        }
+
+        canvas.drawCircle(x1, y1, 10, paint);
+        canvas.drawCircle(x2,y2,10,paint);
+        canvas.drawCircle(x3,y3,10,paint);
+        canvas.drawCircle(x4, y4, 10, paint);
+
+        path.moveTo(x1, y1);
+        path.lineTo(x1,y1);
+        path.lineTo(x2,y2);
+        path.lineTo(x3,y3);
+        path.lineTo(x4,y4);
+        path.lineTo(x1,y1);
+        path.close();
+        canvas.drawPath(path,paint);
+
+    }
+
 
 
     /**
@@ -574,7 +629,32 @@ public class CropActivity extends AppCompatActivity {
         }
 
         //여기서 경로를 받아서 List에 추가해주기!
-        //String str = file.getAbsolutePath().toString();
+        image_path = file.getAbsolutePath().toString();
+
+        //여기서 경로를 받아서 List에 추가해주기!
+        final String str = file.getAbsolutePath().toString();
+
+        View dialog = View.inflate(getApplicationContext(), R.layout.input_memo_name, null);
+        final AlertDialog ad = new AlertDialog.Builder(CropActivity.this).setView(dialog).create();
+        final EditText folderName = (EditText) dialog.findViewById(R.id.folderName);
+        dialog.findViewById(R.id.completeButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (folderName.getText().toString().length() == 0) {
+                    Toast.makeText(CropActivity.this, "아무것도 입력하지 않으셨는데...", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId(), str);
+
+                    insertMemo.execute("http://210.118.64.177/android/insert.php");
+                    ad.hide();
+
+                    Toast.makeText(CropActivity.this, "메모가 생성되었습니다.", Toast.LENGTH_SHORT).show();
+                    setResult(4321);
+                }
+            }
+        });
+        ad.show();
     }
 
     protected void convertBitmapWithJni(Bitmap bitmap){

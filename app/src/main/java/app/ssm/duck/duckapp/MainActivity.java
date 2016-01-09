@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private static final int PICK_FROM_GALLERY = 1; //갤러리
     private static final int MAKE_NEW_FOLDER = 2; //폴더 추가
     private static final int ERROR_MESSAGE = 3; //Error
+    private static final int SAVE_OK = 4321;
 
     private ListView mListView = null;
     private ListViewAdapter mAdapter = null;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_navi);
 
         Intent successIntent = getIntent();
@@ -87,8 +90,15 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new ListViewAdapter(this);
         mListView.setAdapter(mAdapter);
 
-        GetMemo getMemo = new GetMemo(account.getId(), mAdapter, mListView);
+        GetMemo getMemo = new GetMemo(account.getId(), mAdapter, mListView, 0);
         getMemo.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAdapter.notifyDataSetChanged();
     }
 
     //클릭이벤트
@@ -118,35 +128,11 @@ public class MainActivity extends AppCompatActivity
                     startActivityForResult(Intent.createChooser(intent, "사진 불러오기"), ERROR_MESSAGE);
                 }
                 break;
-
-            // 임시로 추가해놓은 메모 만들기
-            case R.id.btn_add_folder:
-                View dialog = View.inflate(getApplicationContext(), R.layout.input_memo_name, null);
-                final AlertDialog ad = new AlertDialog.Builder(MainActivity.this).setView(dialog).create();
-                final EditText folderName = (EditText) dialog.findViewById(R.id.folderName);
-                dialog.findViewById(R.id.completeButton).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (folderName.getText().toString().length() == 0) {
-
-                        } else {
-                            InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId());
-
-                            insertMemo.execute("http://210.118.64.177/android/insert.php");
-                            ad.hide();
-
-                            Toast.makeText(MainActivity.this, "메모가 생성되었습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                ad.show();
-                break;
         }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Intent intent = new Intent(this, CropActivity.class);
-        Bitmap photo = null;
 
         if (requestCode == ERROR_MESSAGE) {
             ;
@@ -154,15 +140,11 @@ public class MainActivity extends AppCompatActivity
 
             switch (requestCode) {
                 case PICK_FROM_CAMERA:
-                    //크기가 일정 이상일 경우에만 option을 지정해준다
-                    BitmapFactory.Options options = new BitmapFactory.Options();
                     final File file = getTempFile(this);
-                    options.inSampleSize = 2;
-                    photo = BitmapFactory.decodeFile(file.getAbsolutePath().toString(), options);
 
                     intent.putExtra("imagePath", file.getAbsolutePath().toString());
                     intent.putExtra("data", account);
-                    startActivity(intent);
+                    startActivityForResult(intent, SAVE_OK);
 
                     break;
 
@@ -171,50 +153,26 @@ public class MainActivity extends AppCompatActivity
                     Uri selectedImageUri = data.getData();
                     String selectedImagePath = getRealPath(selectedImageUri);
 
-
-                    BitmapFactory.Options options2 = new BitmapFactory.Options();
-                    options2.inSampleSize = 2;
-                    photo = BitmapFactory.decodeFile(selectedImagePath, options2);
-
                     intent.putExtra("imagePath", selectedImagePath);
-                    startActivity(intent);
+                    startActivityForResult(intent, SAVE_OK);
 
                     break;
 
-                case MAKE_NEW_FOLDER:
+                case SAVE_OK:
+                    GetMemo getMemo = new GetMemo(account.getId(), mAdapter, mListView, SAVE_OK);
+                    getMemo.execute();
+
+                    break;
+                case RESULT_OK:
+                    getMemo = new GetMemo(account.getId(), mAdapter, mListView, SAVE_OK);
+                    getMemo.execute();
+
                     break;
             }
         }
 
     } //onActivityResult 종료
 
-    private void SaveImage(Bitmap bitmapimg) {
-
-        File myDir = new File("/sdcard/SSMemo_folder");
-        myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
-        File file = new File(myDir, fname);
-
-        if (file.exists()) file.delete();
-
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmapimg.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file)));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //전처리된 이미지의 경로.
-        //convertedFilePath = file.getAbsolutePath().toString();
-    }
 
     private File getTempFile(Context context) {
         final File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
