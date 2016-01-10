@@ -28,7 +28,7 @@ public class WebActivity extends AppCompatActivity {
         // Javascript 사용가능
         mWebView.getSettings().setJavaScriptEnabled(true);
 
-        mWebView.loadUrl("http://www.broduck.com/memo/editPage?id=" + memo_id);
+        mWebView.loadUrl("http://www.broduck.com/memo/readPage?id=" + memo_id);
         mWebView.setWebViewClient(new SSMemoWebViewClient());
     }
 

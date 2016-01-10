@@ -1,6 +1,9 @@
 package app.ssm.duck.duckapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+
 import java.util.ArrayList;
 
 /**
@@ -23,10 +28,14 @@ import java.util.ArrayList;
 public class ListViewAdapter extends BaseAdapter {
     private Context mContext = null;
     private ArrayList<ListData> mListData = new ArrayList<ListData>();
+    private AQuery aq;
+    private UserInfo userInfo;
 
-    public ListViewAdapter(Context mContext) {
+    public ListViewAdapter(Context mContext, UserInfo userInfo) {
         super();
         this.mContext = mContext;
+        this.aq = new AQuery(mContext);
+        this.userInfo = userInfo;
     }
 
     @Override
@@ -68,9 +77,9 @@ public class ListViewAdapter extends BaseAdapter {
 
         if (mData.mImage != null) {
             holder.mImage.setVisibility(View.VISIBLE);
-            Bitmap bm = BitmapFactory.decodeFile(mData.mImage);
 
-            holder.mImage.setImageBitmap(bm);
+            aq.id(holder.mImage).image("http://210.118.64.177:8080/resources/images/" + userInfo.getId() + "/" + mData.mImage);
+
         } else {
             holder.mImage.setVisibility(View.GONE);
         }
@@ -91,12 +100,31 @@ public class ListViewAdapter extends BaseAdapter {
         holder.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteMemo deleteMemo = new DeleteMemo(mData.mHash);
-                deleteMemo.execute();
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
+                alt_bld.setMessage("메모를 삭제하시겠습니까?")
+                        .setCancelable(false)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DeleteMemo deleteMemo = new DeleteMemo(mData.mHash);
+                                deleteMemo.execute();
 
-                remove(position);
+                                remove(position);
 
-                Toast.makeText(mContext, "메모가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "메모가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alt_bld.create();
+                alertDialog.setTitle("메모 삭제");
+                alertDialog.setIcon(R.drawable.ic_delete_black_36dp);
+                alertDialog.show();
             }
         });
 
@@ -114,6 +142,7 @@ public class ListViewAdapter extends BaseAdapter {
             mListData.add(addInfo);
         } else {
             mListData.add(0, addInfo);
+            notifyDataSetChanged();
         }
     }
 

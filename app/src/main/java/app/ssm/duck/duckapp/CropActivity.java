@@ -44,10 +44,9 @@ public class CropActivity extends AppCompatActivity {
     int nwidth=0, nheight=0; float srtHeight = 0 , endHeight = 0; int cwidth=0, cheight=0;
     private cropView cview;
     private LinearLayout.LayoutParams params;
-    private android.widget.Button btn;
-    boolean dragcoordi = false, croppedflg = false, initrange = true;
+    boolean dragcoordi = false, croppedflg = false, initrange = true, skipflg = false;
     int refIdx = 0;
-    private boolean btnPressed = false;
+    int btnPressed = 0;
     String image_path; String buttonTxt;
     Bitmap bitmapimg,resizedbitmap;
     Matrix matrix;
@@ -62,17 +61,19 @@ public class CropActivity extends AppCompatActivity {
         System.loadLibrary("NDKTest");
     }
 
-    public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap, Bitmap mbitmap);
+    public native void convertImage(Bitmap photo, Bitmap gbitmap, Bitmap tbitmap);
     public native void convertForShow(Bitmap bitmap, Bitmap rbitmap);
     public native void seperateLetter(Bitmap bitmap);
-    //
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setLayoutView(this);
+    }
 
+    void setLayoutView(Context context){
         //cropView의 화면구성.
         LinearLayout vlayout = new LinearLayout(this);
         params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -113,25 +114,37 @@ public class CropActivity extends AppCompatActivity {
         //버튼 클릭 이벤트.
         cropBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if(btnPressed == false){
-                    //diversion에서 crop버튼으로 text를 바꿔준다.
+                if(btnPressed == 0){
+                    Toast toast = Toast.makeText(v.getContext(),R.string.diversion_string, Toast.LENGTH_LONG);
+                    toast.show();
+                    //크롭버튼으로 변환.
                     buttonTxt = getString(R.string.crop_string);
                     cropBtn.setText(buttonTxt);
 
-                    //customView를 채워준다.
+                    //이미지 왜곡
                     cropping(cview);
-                    btnPressed = true;
+                    btnPressed++;
 
-                }else if(btnPressed == true){
+                }else if(btnPressed == 1 ){
+                    Toast toast = Toast.makeText(v.getContext(),R.string.crop_string, Toast.LENGTH_LONG);
+                    toast.show();
+                    //확인버튼으로 전환
                     buttonTxt = getString(R.string.confirm_string);
                     skipBtn.setText(buttonTxt);
 
-                    //crop과정이 끝났으므로 버튼을 제거한다.
+                    //버튼 제거
                     hlayout.removeView(v);
 
                     //customView를 채워준다.
                     cutting(cview);
                     convertBitmapWithJni(bitmapimg);
+                    btnPressed++;
+
+                }else{
+                    Intent intent = new Intent();
+                    intent.putExtra("SUCCESS", 4321);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
 
             }
@@ -140,18 +153,36 @@ public class CropActivity extends AppCompatActivity {
         skipBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 String str;
-                if(btnPressed == false){
-                    x1 = 0; x2 = 0; x3= 0; x4 = 0;
+                if(btnPressed == 0){
+                    Toast toast = Toast.makeText(v.getContext(),R.string.skip_string, Toast.LENGTH_LONG);
+                    toast.show();
 
                     //diversion에서 crop버튼으로 text를 바꿔준다.
                     buttonTxt = getString(R.string.crop_string);
                     cropBtn.setText(buttonTxt);
 
-                    //customView를 채워준다.
+                    //이미지 왜곡
+                    skipflg = true;
                     cropping(cview);
-                    btnPressed = true;
-                }else {
-                    //crop을 끝냈으므로 화면을 전환한다.
+                    btnPressed++;
+
+                }else if(btnPressed == 1){
+                    Toast toast = Toast.makeText(v.getContext(),R.string.skip_string, Toast.LENGTH_LONG);
+                    toast.show();
+
+                    buttonTxt = getString(R.string.confirm_string);
+                    cropBtn.setText(buttonTxt);
+
+                    //버튼 제거
+                    hlayout.removeView(v);
+
+                    //cutting할 좌표만 set해주면 될듯!.
+                    skipflg = true;
+                    cutting(cview);
+                    convertBitmapWithJni(bitmapimg);
+                    btnPressed++;
+
+                }else{
                     Intent intent = new Intent();
                     intent.putExtra("SUCCESS", 4321);
                     setResult(RESULT_OK, intent);
@@ -159,7 +190,6 @@ public class CropActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     /**
@@ -169,23 +199,27 @@ public class CropActivity extends AppCompatActivity {
         v.destroyDrawingCache();
         v.bringToFront();
 
-        int srtx = (int)x1;
-        int srty = (int)y1;
+        if(skipflg == true){
+            skipflg = false;
+        }else {
+            int srtx = (int) x1;
+            int srty = (int) y1;
 
-        int cw = (int)getWidth();
-        int ch = (int)getHeight();
+            int cw = (int) getWidth();
+            int ch = (int) getHeight();
 
-        try{
-            if(rotateFlag == 2 || rotateFlag == 0){
-                srty = srty-(int)srtHeight;
+            try {
+                if (rotateFlag == 2 || rotateFlag == 0) {
+                    srty = srty - (int) srtHeight;
+                }
+                Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, srtx, srty, cw, ch);
+                if (bitmapimg != cuttedbitmap) {
+                    bitmapimg.recycle();
+                    bitmapimg = cuttedbitmap;
+                }
+            } catch (OutOfMemoryError e) {
+
             }
-            Bitmap cuttedbitmap = Bitmap.createBitmap(resizedbitmap, srtx, srty, cw, ch);
-            if (bitmapimg != cuttedbitmap) {
-                bitmapimg.recycle();
-                bitmapimg = cuttedbitmap;
-            }
-        }catch (OutOfMemoryError e){
-
         }
         croppedflg = true;
         v.invalidate();
@@ -200,9 +234,17 @@ public class CropActivity extends AppCompatActivity {
         v.destroyDrawingCache();
         v.bringToFront();
 
+        int cw = (int)getWidth();
+        int ch = (int)getHeight();
+
+        if(skipflg == true){
+            x1=0;x2=0;x3=0;x4=0;
+            skipflg = false;
+        }
 
         float[] src = new float[] {x1,y1,x4,y4,x3,y3,x2,y2};
-        float[] dst = new float[] {0,0,resizedbitmap.getWidth(),0,resizedbitmap.getWidth(),resizedbitmap.getHeight(),0,resizedbitmap.getHeight()};
+        float[] dst = new float[] {x1,y1,x1+cw,y1,x1+cw,y1+ch,x1,y1+ch};
+        //float[] dst = new float[] {0,0,resizedbitmap.getWidth(),0,resizedbitmap.getWidth(),resizedbitmap.getHeight(),0,resizedbitmap.getHeight()};
 
         matrix = new Matrix();
         matrix.setPolyToPoly(src, 0, dst, 0, src.length >> 1);
@@ -303,7 +345,7 @@ public class CropActivity extends AppCompatActivity {
          */
         public void compareToCoordi(float x,float y){
 
-            if(btnPressed == true){
+            if(btnPressed == 1){
                 dragcoordi = true;
             }else{
                 if(x<=0 || x>=nwidth || y<= srtHeight || y>= endHeight){
@@ -341,7 +383,7 @@ public class CropActivity extends AppCompatActivity {
          */
         public void dragCoordi(float x, float y){
             //범위를 벗어날 경우엔 자신 그대로.
-            if(btnPressed == true){
+            if(btnPressed == 1){
                 dragcoordi = true;
 
                 if(refIdx == 1){
@@ -389,7 +431,6 @@ public class CropActivity extends AppCompatActivity {
         }
 
 
-
         /**
          * cropView의 Canvas에 Bitmap과 crop영역을 그려주는 함수.
          */
@@ -404,8 +445,6 @@ public class CropActivity extends AppCompatActivity {
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(10);
-
-            //
 
 
             //비트맵의 회전 정도에 따라 캔버스에 비율을 맞춰서 그려준다.
@@ -427,10 +466,12 @@ public class CropActivity extends AppCompatActivity {
             resizedbitmap = backbitmap;
 
             //crop할 사각형 영역을 그려준다
-            if(btnPressed == false && croppedflg == false){
+            if(btnPressed == 0 && croppedflg == false){
                 setCropRange(canvas);
-            }else if(btnPressed == true && croppedflg == false){
+            }else if(btnPressed == 1 && croppedflg == false){
                 setCropRecRange(canvas);
+            }else{
+                ;
             }
         }
     }
@@ -522,15 +563,15 @@ public class CropActivity extends AppCompatActivity {
      */
     private void rotateBitmapImage(int degree){
 
-        Bitmap bm = BitmapFactory.decodeFile(image_path);
+        // Bitmap bm = BitmapFactory.decodeFile(image_path);
 
-        if(bm.getWidth() > 3000 || bm.getHeight() > 3000) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
-            bitmapimg = BitmapFactory.decodeFile(image_path, options);
-        }else{
-            bitmapimg = bm;
-        }
+        //if(bm.getWidth() > 3000 || bm.getHeight() > 3000) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 3;
+        bitmapimg = BitmapFactory.decodeFile(image_path, options);
+        // }else{
+        //  bitmapimg = bm;
+        //}
 
         if(degree != 0 && bitmapimg != null){
             Matrix m = new Matrix();
@@ -594,25 +635,21 @@ public class CropActivity extends AppCompatActivity {
         Random generator = new Random();
         int n = 10000;
         n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
+        final String fname = "Image-" + n + ".jpg";
         File file = new File(myDir, fname);
 
-        /* 이미지 서버 전송 시작
-         * @Usage
-         * 파일 확인 방법
-         * 브라우저를 열고
-         * ftp://210.118.64.177 접속
-         * images 디렉터리에 들어가면
-         * userId 디렉터리에 fname 으로 저장
-         * 거기 들어가서 이미지 파일 클릭하면 볼 수 있음!
+        /**
+         * 이미지 서버 전송 시작
          */
         SaveToServer server = new SaveToServer(myDir, fname, account.getId());
         try {
-            server.execute(new URL("http://210.118.64.177"));
+            server.execute(new URL("http://210.118.64.177:8080"));
         } catch (MalformedURLException e) {
             Log.d("FTP", "SaveImage.server.execute : Execute Error!");
         }
-        //이미지 서버 전송 끝
+        /**
+         * 끝
+         */
 
         if (file.exists()) file.delete();
 
@@ -644,7 +681,7 @@ public class CropActivity extends AppCompatActivity {
                     Toast.makeText(CropActivity.this, "아무것도 입력하지 않으셨는데...", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId(), str);
+                    InsertMemo insertMemo = new InsertMemo(folderName.getText().toString(), account.getId(), fname);
 
                     insertMemo.execute("http://210.118.64.177/android/insert.php");
                     ad.hide();
@@ -658,14 +695,13 @@ public class CropActivity extends AppCompatActivity {
     }
 
     protected void convertBitmapWithJni(Bitmap bitmap){
-        Bitmap gbitmap, tbitmap, mbitmap, rbitmap;
+        Bitmap gbitmap, tbitmap, rbitmap;
 
         gbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //grayscaled
         tbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //thresholeded
-        mbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ALPHA_8); //mopology
         rbitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888); //showimage
 
-        convertImage(bitmap, gbitmap, tbitmap, mbitmap);
+        convertImage(bitmap, gbitmap, tbitmap);
         seperateLetter(tbitmap);
         convertForShow(tbitmap, rbitmap);
         SaveImage(rbitmap);

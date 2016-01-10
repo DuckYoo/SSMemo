@@ -179,44 +179,44 @@ void threshold(AndroidBitmapInfo* ginfo,AndroidBitmapInfo* tinfo, void* gpixels,
                     *(tdata + x + y * tinfo->width) = 255;
                 //*///end of Case1
 
-    /***************************this is for loacl thresholding median filter: Case2
-    for (i = -3; i <= 3; i++) {
-        for (j = -3; j <= 3; j++) {
-            sum += *(gdata + x + i + (y + j) * (ginfo->stride));
-        }
-    }
+                /***************************this is for loacl thresholding median filter: Case2
+                for (i = -3; i <= 3; i++) {
+                    for (j = -3; j <= 3; j++) {
+                        sum += *(gdata + x + i + (y + j) * (ginfo->stride));
+                    }
+                }
 
-sum -= 130;
-if (*(gdata + x + y * ginfo->width) < (sum / 49))
-    *(tdata + x + y * ginfo->width) = 255;
-else
-    *(tdata + x + y * ginfo->width) = 0;
-***********************************************///end of Case2
+            sum -= 130;
+            if (*(gdata + x + y * ginfo->width) < (sum / 49))
+                *(tdata + x + y * ginfo->width) = 255;
+            else
+                *(tdata + x + y * ginfo->width) = 0;
+            ***********************************************///end of Case2
 
-    /*this is for mean filter. but it takes too long time.
-    for(i=-3;i<=3;i++){
-        for(j=-3;j<=3;j++){
-            pvalue[idx++] = *(gdata + x + y * ginfo->width);
-        }
-    }
-    for(i=0; i<48; i++){
-        for(j=i; j<48; j++){
-            if(pvalue[j] > pvalue[j+1]){
-                int tmp = pvalue[j];
-                pvalue[j] = pvalue[j+1];
-                pvalue[j+1] = tmp;
+                /*this is for mean filter. but it takes too long time.
+                for(i=-3;i<=3;i++){
+                    for(j=-3;j<=3;j++){
+                        pvalue[idx++] = *(gdata + x + y * ginfo->width);
+                    }
+                }
+                for(i=0; i<48; i++){
+                    for(j=i; j<48; j++){
+                        if(pvalue[j] > pvalue[j+1]){
+                            int tmp = pvalue[j];
+                            pvalue[j] = pvalue[j+1];
+                            pvalue[j+1] = tmp;
+                        }
+                    }
+                }
+                if(pvalue[49/2] < *(gdata + x + y * ginfo->width))
+                    *(tdata + x + y * ginfo->width) = 255;
+                else
+                    *(tdata + x + y * ginfo->width) = 0;*/
+
+
             }
         }
     }
-    if(pvalue[49/2] < *(gdata + x + y * ginfo->width))
-        *(tdata + x + y * ginfo->width) = 255;
-    else
-        *(tdata + x + y * ginfo->width) = 0;*/
-
-
-           }
-      }
-     }
 
 /* global threshloding
     for (y = 0; y < ginfo->height -1; y++) {
@@ -291,17 +291,15 @@ void morphology(AndroidBitmapInfo* tinfo,AndroidBitmapInfo* minfo, void* tpixels
     //아니면 0의 값을 반환
 }
 
-JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap, jobject tbitmap,jobject mbitmap) {
+JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage(JNIEnv *env, jobject obj, jobject bitmap, jobject graybitmap, jobject tbitmap) {
 
 
     AndroidBitmapInfo info;
     AndroidBitmapInfo grayinfo;
     AndroidBitmapInfo tinfo;
-    AndroidBitmapInfo minfo;
     void* pixels;
     void* graypixels;
     void* tpixels;
-    void* mpixels;
 
 
     //get information for bitmap object
@@ -314,10 +312,6 @@ JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage(JNIEn
         return;
     }
     if(0>AndroidBitmap_getInfo(env, tbitmap, &tinfo)){
-        LOGE("AndroidBitmap_getInfo() failed!");
-        return;
-    }
-    if(0>AndroidBitmap_getInfo(env, mbitmap, &minfo)){
         LOGE("AndroidBitmap_getInfo() failed!");
         return;
     }
@@ -348,18 +342,11 @@ JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage(JNIEn
         LOGE("AndroidBitmap_lockPixels() failed!");
         return;
     }
-    if(0> AndroidBitmap_lockPixels(env,mbitmap,&mpixels)){
-        LOGE("AndroidBitmap_lockPixels() failed!");
-        return;
-    }
-
     //converting...
     reverse(&info,&grayinfo,pixels,graypixels);
     threshold(&grayinfo,&tinfo,graypixels,tpixels);
-    morphology(&tinfo,&minfo,tpixels,mpixels);
 
     AndroidBitmap_unlockPixels(env,bitmap);
     AndroidBitmap_unlockPixels(env,graybitmap);
     AndroidBitmap_unlockPixels(env,tbitmap);
-    AndroidBitmap_unlockPixels(env,mbitmap);
 }

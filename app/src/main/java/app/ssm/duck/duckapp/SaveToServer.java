@@ -56,7 +56,7 @@ public class SaveToServer extends AsyncTask<URL, Void, Long> {
 
             InputStream inputStream = new FileInputStream(file);
 
-            client.changeWorkingDirectory("./images/");
+            client.changeWorkingDirectory("./tomcat/webapps/ssmemo/resources/images");
 
             if (!client.changeWorkingDirectory("./" + dName)) {
                 client.makeDirectory("./" + dName);

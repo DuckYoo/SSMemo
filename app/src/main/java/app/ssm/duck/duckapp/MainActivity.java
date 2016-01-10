@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
          */
         mListView = (ListView) findViewById(R.id.mList);
 
-        mAdapter = new ListViewAdapter(this);
+        mAdapter = new ListViewAdapter(this, account);
         mListView.setAdapter(mAdapter);
 
         GetMemo getMemo = new GetMemo(account.getId(), mAdapter, mListView, 0);
@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity
                     String selectedImagePath = getRealPath(selectedImageUri);
 
                     intent.putExtra("imagePath", selectedImagePath);
+                    intent.putExtra("data", account);
                     startActivityForResult(intent, SAVE_OK);
 
                     break;
@@ -198,11 +199,16 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navi, menu);
 
-        TextView user_disPlayname = (TextView) findViewById(R.id.user_displayName);
-        user_disPlayname.setText(account.getDisplayName());
+        try {
 
-        TextView user_email = (TextView) findViewById(R.id.user_email);
-        user_email.setText(account.getEmail());
+            TextView user_disPlayname = (TextView) findViewById(R.id.user_displayName);
+            user_disPlayname.setText(account.getDisplayName());
+
+            TextView user_email = (TextView) findViewById(R.id.user_email);
+            user_email.setText(account.getEmail());
+        } catch (Exception e) {
+            Log.d("TAG", "여기서 죽네");
+        }
         return true;
     }
 

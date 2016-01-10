@@ -53,7 +53,7 @@ public class DeleteMemo extends AsyncTask<String, String, String> {
 
 
         } catch (Exception e) {
-            Log.d("DB", "insertDB Error!");
+            Log.d("DB", "DeleteMemo Error!");
 
             return "Error";
         }

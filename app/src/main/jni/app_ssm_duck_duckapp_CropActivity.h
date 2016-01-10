@@ -66,10 +66,10 @@ extern "C" {
 /*
  * Class:     app_ssm_duck_duckapp_CropActivity
  * Method:    convertImage
- * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
+ * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
  */
 JNIEXPORT void JNICALL Java_app_ssm_duck_duckapp_CropActivity_convertImage
-  (JNIEnv *, jobject, jobject, jobject, jobject, jobject);
+  (JNIEnv *, jobject, jobject, jobject, jobject);
 
 /*
  * Class:     app_ssm_duck_duckapp_CropActivity
