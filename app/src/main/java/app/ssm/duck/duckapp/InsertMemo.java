@@ -23,7 +23,7 @@ public class InsertMemo extends AsyncTask<String, Void, Long> {
     public InsertMemo(String memoName, String userId, String memoImage) {
         this.memoName = memoName;
         this.userId = userId;
-        this.memoImage = memoImage;
+        this.memoImage = "http://210.118.64.177:8080/resources/images/" + userId + "/" + memoImage;
     }
 
     @Override

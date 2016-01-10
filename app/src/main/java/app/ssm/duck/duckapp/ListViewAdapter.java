@@ -78,7 +78,7 @@ public class ListViewAdapter extends BaseAdapter {
         if (mData.mImage != null) {
             holder.mImage.setVisibility(View.VISIBLE);
 
-            aq.id(holder.mImage).image("http://210.118.64.177:8080/resources/images/" + userInfo.getId() + "/" + mData.mImage);
+            aq.id(holder.mImage).image(mData.mImage);
 
         } else {
             holder.mImage.setVisibility(View.GONE);
